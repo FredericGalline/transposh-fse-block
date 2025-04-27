@@ -24,7 +24,7 @@ jobs:
         run: |
           for dir in ${{ steps.list-blocks.outputs.dirs }}; do
             echo "📦 Traitement de $$dir"
-            cd $$dir
+            cd $dir
             npm ci || npm install
             npm run build
             cd - > /dev/null
