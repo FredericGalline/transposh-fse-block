@@ -12,8 +12,6 @@ jobs:
     steps:
       - name: 📂 Checkout du dépôt avec historique complet
         uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
 
       - name: 🔥 Nettoyer le dossier du thème avant déploiement
         uses: appleboy/ssh-action@master
@@ -26,7 +24,7 @@ jobs:
             echo "Suppression du dossier existant..."
             rm -rf /home/${{ secrets.SSH_USER }}/site/public_html/wp-content/themes/la-maison-sur-la-sorgue/*
 
-      - name: 📄 SCP vers Production
+      - name: 📄 SCP vers Production UBEEZ
         uses: appleboy/scp-action@v0.1.6
         with:
           host: ${{ secrets.SSH_HOST }}
