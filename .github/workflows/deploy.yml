@@ -4,7 +4,7 @@ on:
   push:
     branches:
       - main
-      
+
 jobs:
   deploy_ubeez:
     name: 🚀 Déploiement Production
@@ -14,22 +14,6 @@ jobs:
         uses: actions/checkout@v3
         with:
           fetch-depth: 0
-      
-      - name: 🔍 Vérifier les secrets
-        run: |
-          if [ -z "${{ secrets.SSH_HOST_UBEEZ_UBEEZ }}" ]; then
-            echo "❌ Le secret SSH_HOST_UBEEZ n'est pas configuré"
-            exit 1
-          fi
-          if [ -z "${{ secrets.SSH_USER_UBEEZ }}" ]; then
-            echo "❌ Le secret SSH_USER_UBEEZ n'est pas configuré"
-            exit 1
-          fi
-          if [ -z "${{ secrets.DEPLOY_KEY_UBEEZ }}" ]; then
-            echo "❌ Le secret DEPLOY_KEY_UBEEZ n'est pas configuré"
-            exit 1
-          fi
-          echo "✅ Tous les secrets sont correctement configurés"
 
       - name: 🔥 Nettoyer le dossier du thème avant déploiement
         uses: appleboy/ssh-action@master
