@@ -4,40 +4,11 @@ on:
   push:
     branches:
       - main
-
+      
 jobs:
-  build:
-    name: 🔨 Build des blocs Gutenberg
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: 📥 Cloner le dépôt
-        uses: actions/checkout@v3
-
-      - name: 📦 Setup Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: '18'
-          cache: 'npm'
-
-      - name: 📚 Installer les dépendances
-        run: npm ci || npm install
-        
-      - name: 🧶 Builder tous les blocs
-        run: npm run build
-        
-      - name: 📂 Préparer les fichiers pour le déploiement
-        run: |
-          rm -rf node_modules
-          rm -rf blocks/*/node_modules
-          
-  deploy:
+  deploy_ubeez:
     name: 🚀 Déploiement Production
-    needs: build
     runs-on: ubuntu-latest
-    # Uniquement exécuter ce job si les secrets requis sont configurés
-    if: "${{ secrets.SSH_HOST != '' && secrets.SSH_USER != '' && secrets.DEPLOY_KEY != '' }}"
-    
     steps:
       - name: 📂 Checkout du dépôt avec historique complet
         uses: actions/checkout@v3
@@ -46,16 +17,16 @@ jobs:
       
       - name: 🔍 Vérifier les secrets
         run: |
-          if [ -z "${{ secrets.SSH_HOST }}" ]; then
-            echo "❌ Le secret SSH_HOST n'est pas configuré"
+          if [ -z "${{ secrets.SSH_HOST_UBEEZ_UBEEZ }}" ]; then
+            echo "❌ Le secret SSH_HOST_UBEEZ n'est pas configuré"
             exit 1
           fi
-          if [ -z "${{ secrets.SSH_USER }}" ]; then
-            echo "❌ Le secret SSH_USER n'est pas configuré"
+          if [ -z "${{ secrets.SSH_USER_UBEEZ }}" ]; then
+            echo "❌ Le secret SSH_USER_UBEEZ n'est pas configuré"
             exit 1
           fi
-          if [ -z "${{ secrets.DEPLOY_KEY }}" ]; then
-            echo "❌ Le secret DEPLOY_KEY n'est pas configuré"
+          if [ -z "${{ secrets.DEPLOY_KEY_UBEEZ }}" ]; then
+            echo "❌ Le secret DEPLOY_KEY_UBEEZ n'est pas configuré"
             exit 1
           fi
           echo "✅ Tous les secrets sont correctement configurés"
@@ -63,23 +34,23 @@ jobs:
       - name: 🔥 Nettoyer le dossier du thème avant déploiement
         uses: appleboy/ssh-action@master
         with:
-          host: ${{ secrets.SSH_HOST }}
-          username: ${{ secrets.SSH_USER }}
-          key: ${{ secrets.DEPLOY_KEY }}
+          host: ${{ secrets.SSH_HOST_UBEEZ }}
+          username: ${{ secrets.SSH_USER_UBEEZ }}
+          key: ${{ secrets.DEPLOY_KEY_UBEEZ }}
           port: 22
           script: |
             echo "Suppression du dossier existant..."
-            rm -rf /home/${{ secrets.SSH_USER }}/site/public_html/wp-content/themes/la-maison-sur-la-sorgue/*
+            rm -rf /home/${{ secrets.SSH_USER_UBEEZ }}/site/public_html/wp-content/themes/la-maison-sur-la-sorgue/*
 
       - name: 📄 SCP vers Production
         uses: appleboy/scp-action@v0.1.6
         with:
-          host: ${{ secrets.SSH_HOST }}
-          username: ${{ secrets.SSH_USER }}
-          key: ${{ secrets.DEPLOY_KEY }}
+          host: ${{ secrets.SSH_HOST_UBEEZ }}
+          username: ${{ secrets.SSH_USER_UBEEZ }}
+          key: ${{ secrets.DEPLOY_KEY_UBEEZ }}
           port: 22
           source: "."
-          target: "/home/${{ secrets.SSH_USER }}/site/public_html/wp-content/themes/la-maison-sur-la-sorgue"
+          target: "/home/${{ secrets.SSH_USER_UBEEZ }}/site/public_html/wp-content/themes/la-maison-sur-la-sorgue"
           rm: false
           strip_components: 0
           overwrite: true
@@ -87,13 +58,13 @@ jobs:
       - name: ✅ Vérifier le déploiement
         uses: appleboy/ssh-action@master
         with:
-          host: ${{ secrets.SSH_HOST }}
-          username: ${{ secrets.SSH_USER }}
-          key: ${{ secrets.DEPLOY_KEY }}
+          host: ${{ secrets.SSH_HOST_UBEEZ }}
+          username: ${{ secrets.SSH_USER_UBEEZ }}
+          key: ${{ secrets.DEPLOY_KEY_UBEEZ }}
           port: 22
           script: |
-            ls -la /home/${{ secrets.SSH_USER }}/site/public_html/wp-content/themes/la-maison-sur-la-sorgue
-            if [ -f "/home/${{ secrets.SSH_USER }}/site/public_html/wp-content/themes/la-maison-sur-la-sorgue/functions.php" ]; then
+            ls -la /home/${{ secrets.SSH_USER_UBEEZ }}/site/public_html/wp-content/themes/la-maison-sur-la-sorgue
+            if [ -f "/home/${{ secrets.SSH_USER_UBEEZ }}/site/public_html/wp-content/themes/la-maison-sur-la-sorgue/functions.php" ]; then
               echo "✅ Le thème La Maison sur la Sorgue a été correctement déployé."
             else
               echo "❌ Le fichier principal du thème est manquant."
