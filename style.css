@@ -1,7 +1,7 @@
 /**
  * Theme Name:        La maison sur la Sorgue
  * Description:       Theme FSE 
- * Version:           1.2.1
+ * Version:           1.2.2
  * Author:            Frédéric Galliné
  * Author URI:        https://ubeez.com
  * Tags:              block-patterns, full-site-editing
@@ -32,3 +32,9 @@
   transform: scale(1.05);
 }
 
+/* Classe pour cacher des éléments en version mobile */
+@media screen and (max-width: 768px) {
+  .hide-on-mobile {
+    display: none !important;
+  }
+}
