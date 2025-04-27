@@ -32,6 +32,13 @@
   transform: scale(1.05);
 }
 
+.coucou {
+  background-color: #f0f0f0;
+  padding: 20px;
+  border-radius: 5px;
+  margin-bottom: 20px;
+}
+
 /* Classe pour cacher des éléments en version mobile */
 @media screen and (max-width: 768px) {
   .hide-on-mobile {

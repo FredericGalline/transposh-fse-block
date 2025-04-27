@@ -116,6 +116,14 @@ add_filter('content_save_pre', function ($content) {
 // Enregistrement des styles personnalisés
 function lamaisonsurlasorgue_enqueue_styles()
 {
+    // Chargement du style principal du thème
+    wp_enqueue_style(
+        'lamaisonsurlasorgue-style',
+        get_stylesheet_uri(),
+        array(),
+        filemtime(get_stylesheet_directory() . '/style.css')
+    );
+
     wp_enqueue_style(
         'lamaisonsurlasorgue-custom-blocks',
         get_template_directory_uri() . '/assets/css/custom-blocks.css',
