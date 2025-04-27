@@ -18,13 +18,27 @@ jobs:
       - name: 🔎 Trouver les dossiers de blocs
         id: list-blocks
         run: |
-          echo "::set-output name=dirs::$(find blocks -type f -name package.json -exec dirname {} \; | paste -sd ' ' -)"
+          echo "dirs=$(find blocks -type f -name package.json -exec dirname {} \; | paste -sd ' ' -)" >> $GITHUB_OUTPUT
+
+      - name: 📦 Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16'
+          cache: 'npm'
+
+      - name: 📚 Installer les dépendances globales
+        run: |
+          npm install -g @wordpress/scripts @wordpress/icons
 
       - name: 🧶 Installer et builder chaque bloc
         run: |
           for dir in ${{ steps.list-blocks.outputs.dirs }}; do
-            echo "📦 Traitement de $$dir"
-            cd $dir
+            echo "📦 Traitement de $dir"
+            cd "$dir"
+            # Ajouter @wordpress/icons aux dépendances
+            if ! grep -q "@wordpress/icons" package.json; then
+              npm install --save @wordpress/icons
+            fi
             npm ci || npm install
             npm run build
             cd - > /dev/null
