@@ -6,34 +6,8 @@ on:
       - main
 
 jobs:
-  build:
-    name: 🔨 Build des blocs Gutenberg
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: 📥 Cloner le dépôt
-        uses: actions/checkout@v3
-
-      - name: 📦 Setup Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: '18'
-          cache: 'npm'
-
-      - name: 📚 Installer les dépendances
-        run: npm ci || npm install
-        
-      - name: 🧶 Builder tous les blocs
-        run: npm run build
-        
-      - name: 📂 Préparer les fichiers pour le déploiement
-        run: |
-          rm -rf node_modules
-          rm -rf blocks/*/node_modules
-          
-  deploy:
-    name: 🚀 Déploiement Production
-    needs: build
+  deploy_ubeez:
+    name: 🚀 Déploiement Production UBEEZ
     runs-on: ubuntu-latest
     steps:
       - name: 📂 Checkout du dépôt avec historique complet
