@@ -1,0 +1,30 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "create-block/card-vertical",
+	"version": "0.1.0",
+	"title": "Vertical Card",
+	"category": "jetstream",
+	"icon": "grid-view",
+	"description": "A vertical card block without SVG.",
+	"example": {},
+	"supports": {
+		"html": false
+	},
+	"textdomain": "card-vertical",
+	"editorScript": "file:./index.js",
+	"editorStyle": "file:./index.css",
+	"style": "file:./style-index.css",
+	"viewScript": "file:./view.js",
+	"attributes": {
+		"title": { "type": "string", "default": "" },
+		"content": { "type": "string", "default": "" },
+		"imageUrl": { "type": "string", "default": "" },
+		"focalPoint": {
+			"type": "object",
+			"default": { "x": 0.5, "y": 0.5 }
+		},
+		"bgColor": { "type": "string", "default": "#ffffff" },
+		"textColor": { "type": "string", "default": "#000000" }
+	}
+}

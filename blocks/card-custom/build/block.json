@@ -1,0 +1,48 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "create-block/card-custom",
+  "version": "0.1.0",
+  "title": "Card Custom",
+  "category": "jetstream",
+  "icon": "grid-view",
+  "description": "A customizable card block with image and text.",
+  "supports": {
+    "html": false
+  },
+  "textdomain": "card",
+  "editorScript": "file:./index.js",
+  "attributes": {
+    "title": {
+      "type": "string",
+      "default": ""
+    },
+    "content": {
+      "type": "string",
+      "default": ""
+    },
+    "imageUrl": {
+      "type": "string",
+      "default": ""
+    },
+    "focalPoint": {
+      "type": "object",
+      "default": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "headerMaxHeight": {
+      "type": "string",
+      "default": "100%"
+    },
+    "bgColor": {
+      "type": "string",
+      "default": "#f5f5f5"
+    },
+    "textColor": {
+      "type": "string",
+      "default": "#333333"
+    }
+  }
+}

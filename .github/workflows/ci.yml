@@ -1,0 +1,31 @@
+name: 🔎 WordPress CI – Plugin/Theme Check
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  validate:
+    name: 🔎 Vérification WordPress (Lint & Structure)
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: ⬇️ Cloner le dépôt
+        uses: actions/checkout@v3
+
+      - name: 🔍 Lint PHP
+        run: |
+          find . -name "*.php" -not -path "./vendor/*" -print0 | xargs -0 -n1 php -l
+
+      - name: 📂 Vérifier fichiers attendus
+        run: |
+          echo "🧩 Fichiers clés présents :"
+          test -f readme.txt && echo "✔️ readme.txt trouvé"
+          test -f $(basename "$GITHUB_REPOSITORY").php && echo "✔️ Fichier principal trouvé"
+          echo "📦 Taille du dépôt :"
+          du -sh .
+
+      - name: ✅ Fin du job
+        run: echo "✔️ Vérification terminée avec succès"

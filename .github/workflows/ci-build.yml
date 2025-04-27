@@ -1,0 +1,31 @@
+name: 🧱 WordPress Build – Blocs Gutenberg
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  build-blocks:
+    name: 🔨 Build des blocs Gutenberg
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 📥 Cloner le dépôt
+        uses: actions/checkout@v3
+
+      - name: 🔎 Trouver les dossiers de blocs
+        id: list-blocks
+        run: |
+          echo "::set-output name=dirs::$(find blocks -type f -name package.json -exec dirname {} \; | paste -sd ' ' -)"
+
+      - name: 🧶 Installer et builder chaque bloc
+        run: |
+          for dir in ${{ steps.list-blocks.outputs.dirs }}; do
+            echo "📦 Traitement de $$dir"
+            cd $$dir
+            npm ci || npm install
+            npm run build
+            cd - > /dev/null
+          done
