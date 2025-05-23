@@ -44,4 +44,32 @@
   .hide-on-mobile {
     display: none !important;
   }
+
+  .wp-block-navigation__responsive-container-content {
+    padding: 1rem 2rem;
+    text-align: left !important;
+    align-items: flex-start !important;
+    gap: 1rem;
+  }
+  .wp-block-navigation__responsive-container-content .wp-block-navigation-item {
+    background-color: aquamarine;
+  }
+  .wp-block-navigation.items-justified-right {
+    --navigation-layout-justification-setting: flex-start;
+    --navigation-layout-justify: flex-start;
+  }
+
+  .wp-block-navigation__submenu-container .wp-block-navigation-submenu {
+    padding: 0 0 0 0.5rem;
+    display: flex;
+    gap: 1rem;
+  }
+
+  .wp-block-navigation-item .wp-block-navigation-link {
+    padding-bottom: 1rem;
+  }
+
+  button.wp-block-navigation__responsive-container-close {
+    padding-right: 1rem;
+  }
 }
