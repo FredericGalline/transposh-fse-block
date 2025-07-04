@@ -2,13 +2,12 @@
 	"$schema": "https://schemas.wp.org/trunk/block.json",
 	"apiVersion": 3,
 	"name": "transposh/fse-language-switcher",
-	"version": "1.0.0",
 	"title": "Transposh Switcher",
 	"category": "widgets",
 	"icon": "translation",
-	"description": "Affiche le widget PHP natif de Transposh avec drapeaux et case Edit Translation",
-	"keywords": ["transposh", "language", "switcher", "translate"],
-	"example": {},
+	"description": "Affiche le widget PHP natif de Transposh avec drapeaux et case Edit Translation.",
+	"keywords": [ "transposh", "language", "switcher", "translate" ],
+	"textdomain": "transposh",
 	"supports": {
 		"html": false,
 		"align": true,
@@ -16,7 +15,6 @@
 		"className": true,
 		"customClassName": true
 	},
-	"attributes": {},
-	"textdomain": "transposh",
-	"render": "file:./render.php"
+	"render": "file:./render.php",
+	"editorScript": "file:./index.js"
 }

@@ -63,10 +63,36 @@ function register_custom_blocks()
     $block_directories = glob(get_template_directory() . '/blocks/*', GLOB_ONLYDIR);
 
     foreach ($block_directories as $block_dir) {
-        $block_json_path = $block_dir . '/block.json';
+        $block_name = basename($block_dir);
 
-        if (file_exists($block_json_path)) {
-            register_block_type($block_json_path);
+        // Debug: Log des blocs trouvés
+        error_log("Bloc trouvé: " . $block_name);
+
+        // Ne pas inclure transposh.php automatiquement (évite le double enregistrement)
+        if ($block_name === 'transposh') {
+            continue;
+        }
+
+        // Pour les autres blocs, vérifier d'abord si le bloc a un fichier PHP d'enregistrement propre
+        $php_file = $block_dir . '/' . $block_name . '.php';
+        if (file_exists($php_file)) {
+            error_log("Inclusion du fichier PHP: " . $php_file);
+            require_once $php_file;
+            continue;
+        }
+
+        // Sinon, chercher le block.json (soit à la racine, soit dans build/)
+        $block_json_paths = [
+            $block_dir . '/block.json',
+            $block_dir . '/build/block.json'
+        ];
+
+        foreach ($block_json_paths as $block_json_path) {
+            if (file_exists($block_json_path)) {
+                error_log("Enregistrement du bloc via: " . $block_json_path);
+                register_block_type($block_json_path);
+                break;
+            }
         }
     }
 }
@@ -140,3 +166,45 @@ function lamaisonsurlasorgue_enqueue_editor_styles()
     add_editor_style('assets/css/custom-blocks.css');
 }
 add_action('after_setup_theme', 'lamaisonsurlasorgue_enqueue_editor_styles');
+
+// Debug: Afficher les blocs enregistrés (à supprimer en production)
+function debug_registered_blocks()
+{
+    if (current_user_can('administrator') && isset($_GET['debug_blocks'])) {
+        $registered_blocks = WP_Block_Type_Registry::get_instance()->get_all_registered();
+        echo '<pre>';
+        echo "Blocs enregistrés:\n";
+        foreach ($registered_blocks as $block_name => $block_type) {
+            if (strpos($block_name, 'transposh/') === 0 || strpos($block_name, 'create-block/') === 0) {
+                echo "✅ " . $block_name . "\n";
+            }
+        }
+        echo '</pre>';
+        exit;
+    }
+}
+add_action('init', 'debug_registered_blocks', 999);
+
+// Test simple pour voir si le bloc transposh est détecté
+add_action('wp_footer', function () {
+    if (current_user_can('administrator') && isset($_GET['test_transposh'])) {
+        echo '<script>console.log("Test transposh actif");</script>';
+        $transposh_path = get_template_directory() . '/blocks/transposh/build';
+        if (file_exists($transposh_path . '/block.json')) {
+            echo '<script>console.log("block.json trouvé dans: ' . $transposh_path . '");</script>';
+        } else {
+            echo '<script>console.log("block.json NOT FOUND dans: ' . $transposh_path . '");</script>';
+        }
+    }
+});
+
+// Enregistrement direct et simple du bloc transposh
+add_action('init', function () {
+    $transposh_block_path = get_template_directory() . '/blocks/transposh/build';
+    if (file_exists($transposh_block_path . '/block.json')) {
+        register_block_type($transposh_block_path);
+        error_log('🎯 Bloc Transposh enregistré directement: ' . $transposh_block_path);
+    } else {
+        error_log('❌ Bloc Transposh NOT FOUND: ' . $transposh_block_path);
+    }
+}, 5); // Priorité haute pour s'assurer qu'il se charge avant les autres

@@ -6,12 +6,7 @@
   "category": "widgets",
   "icon": "translation",
   "description": "Affiche le widget PHP natif de Transposh avec drapeaux et case Edit Translation.",
-  "keywords": [
-    "transposh",
-    "language",
-    "switcher",
-    "translate"
-  ],
+  "keywords": ["transposh", "language", "switcher", "translate"],
   "textdomain": "transposh",
   "supports": {
     "html": false,
@@ -20,6 +15,5 @@
     "className": true,
     "customClassName": true
   },
-  "render": "file:./render.php",
-  "editorScript": "file:./index.js"
+  "render": "file:./render.php"
 }

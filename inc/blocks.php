@@ -30,6 +30,8 @@ function obtenir_blocs_personnalises()
         $block = basename($block_folder);
         $custom_blocks[] = 'create-block/' . $block;
     }
+    // Ajout explicite du bloc dynamique Transposh
+    $custom_blocks[] = 'transposh/fse-language-switcher';
 
     return $custom_blocks;
 }
