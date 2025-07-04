@@ -81,6 +81,7 @@ add_filter('content_save_pre', function ($content) {
         'create-block/card-vertical',
         'create-block/icon-svg',
         'create-block/service-card',
+        'transposh/fse-language-switcher',
     ];
 
     // Parcourt les blocs dans le contenu pour identifier ceux de ton thème
