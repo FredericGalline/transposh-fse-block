@@ -30,4 +30,4 @@ call_user_func_array('transposh_widget', [
 
 $output = ob_get_clean();
 
-return '<div class="wp-block-transposh-fse-language-switcher">' . $output . '</div>';
+return '<div class="wp-block-transposh-fse-language-switcher">' . $output . '</div>' . '<div>DEBUG TRANSPOSED BLOCK</div>';

@@ -68,11 +68,6 @@ function register_custom_blocks()
         // Debug: Log des blocs trouvés
         error_log("Bloc trouvé: " . $block_name);
 
-        // Ne pas inclure transposh.php automatiquement (évite le double enregistrement)
-        if ($block_name === 'transposh') {
-            continue;
-        }
-
         // Pour les autres blocs, vérifier d'abord si le bloc a un fichier PHP d'enregistrement propre
         $php_file = $block_dir . '/' . $block_name . '.php';
         if (file_exists($php_file)) {
@@ -197,14 +192,3 @@ add_action('wp_footer', function () {
         }
     }
 });
-
-// Enregistrement direct et simple du bloc transposh
-add_action('init', function () {
-    $transposh_block_path = get_template_directory() . '/blocks/transposh/build';
-    if (file_exists($transposh_block_path . '/block.json')) {
-        register_block_type($transposh_block_path);
-        error_log('🎯 Bloc Transposh enregistré directement: ' . $transposh_block_path);
-    } else {
-        error_log('❌ Bloc Transposh NOT FOUND: ' . $transposh_block_path);
-    }
-}, 5); // Priorité haute pour s'assurer qu'il se charge avant les autres
