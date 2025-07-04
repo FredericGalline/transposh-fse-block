@@ -13,6 +13,37 @@
     "translate"
   ],
   "textdomain": "transposh",
+  "attributes": {
+    "showFlags": {
+      "type": "boolean",
+      "default": true
+    },
+    "showNames": {
+      "type": "boolean",
+      "default": true
+    },
+    "hideCurrentLanguage": {
+      "type": "boolean",
+      "default": false
+    },
+    "style": {
+      "type": "string",
+      "default": "horizontal",
+      "enum": [
+        "horizontal",
+        "vertical",
+        "dropdown"
+      ]
+    },
+    "nofollow": {
+      "type": "boolean",
+      "default": true
+    },
+    "title": {
+      "type": "string",
+      "default": ""
+    }
+  },
   "supports": {
     "html": false,
     "align": true,

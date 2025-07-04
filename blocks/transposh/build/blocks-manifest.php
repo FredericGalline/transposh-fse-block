@@ -16,6 +16,37 @@ return array(
 			'translate'
 		),
 		'textdomain' => 'transposh',
+		'attributes' => array(
+			'showFlags' => array(
+				'type' => 'boolean',
+				'default' => true
+			),
+			'showNames' => array(
+				'type' => 'boolean',
+				'default' => true
+			),
+			'hideCurrentLanguage' => array(
+				'type' => 'boolean',
+				'default' => false
+			),
+			'style' => array(
+				'type' => 'string',
+				'default' => 'horizontal',
+				'enum' => array(
+					'horizontal',
+					'vertical',
+					'dropdown'
+				)
+			),
+			'nofollow' => array(
+				'type' => 'boolean',
+				'default' => true
+			),
+			'title' => array(
+				'type' => 'string',
+				'default' => ''
+			)
+		),
 		'supports' => array(
 			'html' => false,
 			'align' => true,
