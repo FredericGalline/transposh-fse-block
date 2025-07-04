@@ -25,6 +25,6 @@ if (! defined('ABSPATH')) {
  */
 function transposh_fse_register_block()
 {
-	register_block_type(__DIR__ . '/src');
+	register_block_type(__DIR__ . '/build');
 }
 add_action('init', 'transposh_fse_register_block');
