@@ -5,6 +5,9 @@ require_once get_template_directory() . '/inc/blocks.php';
 // Inclure les fichiers de blocs personnalisés et block patterns
 require_once get_template_directory() . '/inc/blocks-patterns.php';
 
+// Inclure le bloc transposh
+require_once get_template_directory() . '/blocks/transposh/transposh.php';
+
 function remove_default_patterns_and_categories()
 {
     remove_theme_support('core-block-patterns');
@@ -68,6 +71,11 @@ function register_custom_blocks()
         // Debug: Log des blocs trouvés
         error_log("Bloc trouvé: " . $block_name);
 
+        // Exclure le bloc transposh qui a son propre enregistrement
+        if ($block_name === 'transposh') {
+            continue;
+        }
+
         // Pour les autres blocs, vérifier d'abord si le bloc a un fichier PHP d'enregistrement propre
         $php_file = $block_dir . '/' . $block_name . '.php';
         if (file_exists($php_file)) {
@@ -94,6 +102,7 @@ function register_custom_blocks()
 add_action('init', 'register_custom_blocks');
 
 // Désactiver la validation `kses` pour les blocs spécifiques lors de la sauvegarde
+/*
 add_filter('content_save_pre', function ($content) {
     // Liste des blocs spécifiques pour lesquels désactiver le nettoyage
     $blocs_du_theme = [
@@ -118,6 +127,7 @@ add_filter('content_save_pre', function ($content) {
 
     return $content;
 }, 1);
+*/
 
 function nettoyer_svg($svg)
 {
