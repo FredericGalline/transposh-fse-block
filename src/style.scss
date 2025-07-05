@@ -120,37 +120,56 @@
 	.transposh-flag {
 		display: inline-block;
 		vertical-align: middle;
+		margin: 0; // Suppression des marges pour respecter le gap flex
+		padding: 0; // Suppression du padding pour respecter le gap flex
 		
-		// Styles par défaut pour toutes les librairies
+		// Styles par défaut - utiliser seulement height pour préserver le ratio
 		&.transposh-flag-tiny {
-			width: 16px;
 			height: 12px;
+			width: auto; // Laisse le navigateur calculer la largeur selon le ratio
 		}
 		
 		&.transposh-flag-small {
-			width: 20px;
 			height: 15px;
+			width: auto;
 		}
 		
 		&.transposh-flag-medium {
-			width: 32px;
 			height: 24px;
+			width: auto;
 		}
 		
 		&.transposh-flag-large {
-			width: 48px;
 			height: 36px;
+			width: auto;
 		}
 		
 		// Styles spécifiques pour Circle Flags
 		&.transposh-flag-circle-flags {
 			border-radius: 50%;
 			border: 1px solid #ddd;
+			// Pour les cercles, on force un aspect carré
+			&.transposh-flag-tiny {
+				width: 12px;
+				height: 12px;
+			}
+			&.transposh-flag-small {
+				width: 15px;
+				height: 15px;
+			}
+			&.transposh-flag-medium {
+				width: 24px;
+				height: 24px;
+			}
+			&.transposh-flag-large {
+				width: 36px;
+				height: 36px;
+			}
 		}
 		
 		// Styles spécifiques pour Rounded Flags
 		&.transposh-flag-rounded-flags {
-			border-radius: 6px;
+			border-radius: 4px;
 			border: 1px solid #ddd;
 		}
 		
@@ -181,6 +200,27 @@
 			display: inline-flex;
 			align-items: center;
 			justify-content: center;
+			// Pour les emojis, utiliser font-size au lieu de height
+			&.transposh-flag-tiny {
+				font-size: 12px;
+				width: auto;
+				height: auto;
+			}
+			&.transposh-flag-small {
+				font-size: 15px;
+				width: auto;
+				height: auto;
+			}
+			&.transposh-flag-medium {
+				font-size: 24px;
+				width: auto;
+				height: auto;
+			}
+			&.transposh-flag-large {
+				font-size: 36px;
+				width: auto;
+				height: auto;
+			}
 		}
 	}
 }

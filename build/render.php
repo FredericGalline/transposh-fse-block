@@ -56,9 +56,9 @@ if (!function_exists('get_transposh_flag_dimensions')) {
         if (isset($sizes[$flag_size])) {
             return $sizes[$flag_size];
         }
-        
+
         // Fallback vers small si la taille n'est pas définie
-        return $sizes['small'] ?? ['width' => '20px', 'height' => '15px'];
+        return $sizes['small'] ?? ['height' => '15px'];
     }
 }
 
@@ -118,7 +118,7 @@ if (!function_exists('get_country_code_from_lang')) {
             'ch' => 'ch',
             'at' => 'at',
         ];
-        
+
         return $lang_to_country[$lang_code] ?? $lang_code;
     }
 }
@@ -133,12 +133,13 @@ if (!function_exists('render_flag')) {
         $country_code = get_country_code_from_lang($flag_code);
         $classes = "transposh-flag transposh-flag-{$flag_library} transposh-flag-{$flag_size}";
 
-        // Styles inline pour les dimensions
-        $style = sprintf('width: %s; height: %s;', $dimensions['width'], $dimensions['height']);
+        // Styles inline pour les dimensions - utiliser seulement height pour préserver le ratio
+        $style = sprintf('height: %s;', $dimensions['height']);
 
         // Ajout de styles spécifiques selon la librairie
         if ($flag_library === 'circle-flags') {
-            $style .= ' border-radius: 50%;';
+            // Pour les cercles, forcer width = height pour un aspect carré
+            $style = sprintf('width: %s; height: %s; border-radius: 50%;', $dimensions['height'], $dimensions['height']);
         } elseif ($flag_library === 'rounded-flags') {
             $style .= ' border-radius: 4px;';
         }
@@ -147,7 +148,7 @@ if (!function_exists('render_flag')) {
             case 'emoji':
                 $emoji_map = get_country_emoji_map();
                 $emoji = $emoji_map[$country_code] ?? '🏳️';
-                return '<span class="' . $classes . '" style="' . $style . ' font-size: ' . $dimensions['width'] . '; line-height: ' . $dimensions['height'] . ';" title="' . esc_attr($lang_name) . '">' . $emoji . '</span>';
+                return '<span class="' . $classes . '" style="font-size: ' . $dimensions['height'] . '; line-height: ' . $dimensions['height'] . ';" title="' . esc_attr($lang_name) . '">' . $emoji . '</span>';
 
             case 'flagcdn':
             case 'flagicons':

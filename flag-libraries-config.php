@@ -92,22 +92,18 @@ function get_transposh_flag_sizes()
     return [
         'tiny' => [
             'name' => 'Très petit',
-            'width' => '16px',
-            'height' => '12px'
+            'height' => '12px' // Utiliser seulement height pour préserver le ratio
         ],
         'small' => [
             'name' => 'Petit',
-            'width' => '20px',
             'height' => '15px'
         ],
         'medium' => [
             'name' => 'Moyen',
-            'width' => '32px',
             'height' => '24px'
         ],
         'large' => [
             'name' => 'Grand',
-            'width' => '48px',
             'height' => '36px'
         ]
     ];
