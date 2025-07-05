@@ -223,7 +223,7 @@ if (!function_exists('create_horizontal_widget')) {
 }
 
 /**
- * Fonction pour créer la checkbox "Edit Translation"
+ * Fonction pour créer le toggle "Edit Translation" avec le style WordPress
  */
 if (!function_exists('create_edit_translation_checkbox')) {
     function create_edit_translation_checkbox()
@@ -253,12 +253,18 @@ if (!function_exists('create_edit_translation_checkbox')) {
                     !$my_transposh_plugin->edit_mode
                 );
 
-                $checked = $my_transposh_plugin->edit_mode ? 'checked="checked" ' : '';
+                $checked = $my_transposh_plugin->edit_mode ? 'checked' : '';
+                $checked_class = $my_transposh_plugin->edit_mode ? 'is-checked' : '';
 
                 $output .= '<div class="transposh-edit-translation" style="margin-top: 10px;">';
+                $output .= '<label class="transposh-toggle-control">';
                 $output .= '<input type="checkbox" name="tpedit" value="1" ' . $checked;
-                $output .= ' onclick="document.location.href=\'' . esc_attr($ref) . '\';" />';
-                $output .= '&nbsp;<label for="tpedit">' . __('Edit Translation', 'transposh') . '</label>';
+                $output .= ' onclick="document.location.href=\'' . esc_attr($ref) . '\';" style="display: none;" />';
+                $output .= '<span class="transposh-toggle-track ' . $checked_class . '">';
+                $output .= '<span class="transposh-toggle-thumb"></span>';
+                $output .= '</span>';
+                $output .= '<span class="transposh-toggle-label">' . __('Edit Translation', 'transposh') . '</span>';
+                $output .= '</label>';
                 $output .= '</div>';
             }
         }
@@ -326,7 +332,21 @@ if (isset($my_transposh_plugin->widget)) {
             break;
     }
 
-    $final_html = $css_styles . $final_html;
+    // Ajout des styles pour le toggle "Edit Translation"
+    $toggle_styles = '<style>
+        .transposh-toggle-control { display: flex !important; align-items: center !important; gap: 8px !important; cursor: pointer !important; user-select: none !important; }
+        .transposh-toggle-track { position: relative !important; display: inline-block !important; width: 36px !important; height: 18px !important; border-radius: 9px !important; transition: background-color 0.2s ease !important; cursor: pointer !important; }
+        .transposh-toggle-track:not(.is-checked) { background-color: #ddd !important; }
+        .transposh-toggle-track.is-checked { background-color: #007cba !important; }
+        .transposh-toggle-thumb { position: absolute !important; top: 2px !important; width: 14px !important; height: 14px !important; background-color: white !important; border-radius: 50% !important; transition: left 0.2s ease !important; box-shadow: 0 1px 3px rgba(0,0,0,0.3) !important; }
+        .transposh-toggle-track:not(.is-checked) .transposh-toggle-thumb { left: 2px !important; }
+        .transposh-toggle-track.is-checked .transposh-toggle-thumb { left: 20px !important; }
+        .transposh-toggle-label { font-size: 13px !important; color: #555 !important; }
+        .transposh-toggle-control:hover .transposh-toggle-track:not(.is-checked) { background-color: #bbb !important; }
+        .transposh-toggle-control:hover .transposh-toggle-track.is-checked { background-color: #005a87 !important; }
+    </style>';
+
+    $final_html = $css_styles . $toggle_styles . $final_html;
 
     echo $final_html;
     return $final_html;

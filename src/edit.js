@@ -290,23 +290,46 @@ export default function Edit({ attributes, setAttributes }) {
 						)}
 					</div>
 
-					{/* Checkbox Edit Translation */}
+					{/* Toggle Edit Translation */}
 					{showEditTranslation && (
 						<div style={{ marginTop: "10px", fontSize: "12px", color: "#666" }}>
 							<label
 								style={{
 									display: "flex",
 									alignItems: "center",
-									gap: "5px",
+									gap: "8px",
 									cursor: "not-allowed",
+									userSelect: "none",
 								}}
 							>
-								<input
-									type="checkbox"
-									disabled
-									style={{ cursor: "not-allowed" }}
-								/>
-								{__("Edit Translation", "transposh")}
+								<span
+									style={{
+										position: "relative",
+										display: "inline-block",
+										width: "36px",
+										height: "18px",
+										backgroundColor: "#ddd",
+										borderRadius: "9px",
+										transition: "background-color 0.2s",
+									}}
+								>
+									<span
+										style={{
+											position: "absolute",
+											top: "2px",
+											left: "2px",
+											width: "14px",
+											height: "14px",
+											backgroundColor: "white",
+											borderRadius: "50%",
+											transition: "left 0.2s",
+											boxShadow: "0 1px 3px rgba(0,0,0,0.3)",
+										}}
+									></span>
+								</span>
+								<span style={{ fontSize: "13px", color: "#555" }}>
+									{__("Edit Translation", "transposh")}
+								</span>
 							</label>
 						</div>
 					)}
