@@ -121,13 +121,68 @@ export default function Edit({ attributes, setAttributes }) {
 				>
 					<div style={{ fontSize: "24px", marginBottom: "10px" }}>🌐</div>
 					<div style={{ fontWeight: "bold", marginBottom: "8px" }}>
-						{__("Widget Transposh", "transposh")}
+						{title || __("Widget Transposh", "transposh")}
 					</div>
 					<div
-						style={{ fontSize: "12px", color: "#666", marginBottom: "10px" }}
+						style={{ fontSize: "12px", color: "#666", marginBottom: "15px" }}
 					>
 						{__("Aperçu - Le rendu réel sera visible sur le site", "transposh")}
 					</div>
+
+					{/* Prévisualisation plus réaliste */}
+					<div style={{ marginBottom: "10px" }}>
+						{style === "dropdown" && (
+							<select style={{ padding: "5px", borderRadius: "4px" }}>
+								<option>🇫🇷 Français</option>
+								<option>🇬🇧 English</option>
+								<option>🇪🇸 Español</option>
+							</select>
+						)}
+
+						{style === "horizontal" && (
+							<div
+								style={{
+									display: "flex",
+									gap: "10px",
+									justifyContent: "center",
+								}}
+							>
+								{showFlags && <span>🇫🇷</span>}
+								{showNames && <span>Français</span>}
+								{(showFlags || showNames) && <span>|</span>}
+								{showFlags && <span>🇬🇧</span>}
+								{showNames && <span>English</span>}
+								{(showFlags || showNames) && <span>|</span>}
+								{showFlags && <span>🇪🇸</span>}
+								{showNames && <span>Español</span>}
+							</div>
+						)}
+
+						{style === "vertical" && (
+							<div
+								style={{
+									display: "flex",
+									flexDirection: "column",
+									gap: "5px",
+									alignItems: "center",
+								}}
+							>
+								<div>
+									{showFlags && <span>🇫🇷</span>}{" "}
+									{showNames && <span>Français</span>}
+								</div>
+								<div>
+									{showFlags && <span>🇬🇧</span>}{" "}
+									{showNames && <span>English</span>}
+								</div>
+								<div>
+									{showFlags && <span>🇪🇸</span>}{" "}
+									{showNames && <span>Español</span>}
+								</div>
+							</div>
+						)}
+					</div>
+
 					<div style={{ fontSize: "11px", color: "#999" }}>
 						{__("Style:", "transposh")} <strong>{style}</strong> |
 						{__("Drapeaux:", "transposh")}{" "}
@@ -138,12 +193,10 @@ export default function Edit({ attributes, setAttributes }) {
 						<strong>
 							{showNames ? __("Oui", "transposh") : __("Non", "transposh")}
 						</strong>
+						{hideCurrentLanguage && (
+							<span> | {__("Langue actuelle masquée", "transposh")}</span>
+						)}
 					</div>
-					{title && (
-						<div style={{ fontSize: "11px", color: "#999", marginTop: "5px" }}>
-							{__("Titre:", "transposh")} <strong>{title}</strong>
-						</div>
-					)}
 				</div>
 			</div>
 		</>

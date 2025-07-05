@@ -1,7 +1,5 @@
 <?php
 
-error_log('🟢 render.php Transposh exécuté');
-
 /**
  * Render callback for Transposh FSE Language Switcher block
  *
@@ -11,19 +9,28 @@ error_log('🟢 render.php Transposh exécuté');
  * @return string HTML output
  */
 
-if (! function_exists('transposh_widget')) {
-    error_log('🔴 transposh_widget non trouvée');
+// Vérification de l'existence du plugin Transposh
+if (! function_exists('transposh_widget') || ! isset($GLOBALS['my_transposh_plugin'])) {
     $html = '<div class="wp-block-transposh-fse-language-switcher" style="background: #ffebee; padding: 10px; border: 1px solid #f44336; color: #d32f2f;">
         <strong>⚠️ Plugin Transposh requis</strong>
         <p>Le plugin Transposh n\'est pas activé ou la fonction transposh_widget() n\'est pas disponible.</p>
     </div>';
 
-    // Utilisation d'echo au lieu de return pour assurer l'affichage
     echo $html;
     return $html;
 }
 
-error_log('🟢 transposh_widget trouvée, appel du widget');
+// Vérification supplémentaire que le plugin est bien initialisé
+global $my_transposh_plugin;
+if (!isset($my_transposh_plugin) || !is_object($my_transposh_plugin)) {
+    $html = '<div class="wp-block-transposh-fse-language-switcher" style="background: #fff3e0; padding: 10px; border: 1px solid #ff9800; color: #f57c00;">
+        <strong>⚠️ Plugin Transposh non initialisé</strong>
+        <p>Le plugin Transposh n\'est pas correctement initialisé.</p>
+    </div>';
+
+    echo $html;
+    return $html;
+}
 
 // Récupération des attributs avec valeurs par défaut
 $show_flags = isset($attributes['showFlags']) ? $attributes['showFlags'] : true;
@@ -33,127 +40,251 @@ $style = isset($attributes['style']) ? $attributes['style'] : 'horizontal';
 $nofollow = isset($attributes['nofollow']) ? $attributes['nofollow'] : true;
 $title = isset($attributes['title']) ? $attributes['title'] : '';
 
-error_log('🔍 Attributs reçus: ' . json_encode($attributes));
-error_log('🔍 Style sélectionné: ' . $style);
+/**
+ * Fonction pour créer un widget personnalisé avec les paramètres du bloc
+ */
+if (!function_exists('create_custom_transposh_widget')) {
+    function create_custom_transposh_widget($widget_args, $show_flags, $show_names, $hide_current, $style, $nofollow, $title = '')
+    {
+        global $my_transposh_plugin;
 
-// Détermination du widget_file selon le style
-$widget_file = 'combo/tpw_combo.php'; // par défaut
-switch ($style) {
-    case 'dropdown':
-        $widget_file = 'dropdown/tpw_dropdown.php';
-        break;
-    case 'vertical':
-        $widget_file = 'list/tpw_list.php';
-        break;
-    case 'horizontal':
-    default:
-        $widget_file = 'combo/tpw_combo.php';
-        break;
-}
+        // Calculer le chemin du plugin pour les images
+        $plugpath = parse_url($my_transposh_plugin->transposh_plugin_url, PHP_URL_PATH);
 
-error_log('🔍 Widget file calculé: ' . $widget_file);
+        $output = '';
+        $rel_nofollow = $nofollow ? ' rel="nofollow"' : '';
 
-error_log('🔍 Widget file final: ' . $widget_file);
+        // Titre du widget
+        if (!empty($title)) {
+            $output .= '<h3 class="widget-title">' . esc_html($title) . '</h3>';
+        }
 
-// Paramètres pour le widget Transposh
-$widget_args = [
-    'title'        => $title,
-    'nofollow'     => $nofollow ? 1 : 0,
-    'hide_current' => $hide_current ? 1 : 0,
-    'show_flags'   => $show_flags ? 1 : 0,
-    'show_names'   => $show_names ? 1 : 0,
-];
+        // Générer le contenu selon le style
+        switch ($style) {
+            case 'dropdown':
+                $output .= create_dropdown_widget($widget_args, $show_flags, $show_names, $hide_current, $plugpath, $rel_nofollow);
+                break;
+            case 'vertical':
+                $output .= create_vertical_widget($widget_args, $show_flags, $show_names, $hide_current, $plugpath, $rel_nofollow);
+                break;
+            case 'horizontal':
+            default:
+                $output .= create_horizontal_widget($widget_args, $show_flags, $show_names, $hide_current, $plugpath, $rel_nofollow);
+                break;
+        }
 
-// Ajout de paramètres spécifiques selon le style
-switch ($style) {
-    case 'dropdown':
-        $widget_args['widget_file'] = 'dropdown/tpw_dropdown.php';
-        $widget_args['display_style'] = 'dropdown';
-        break;
-    case 'vertical':
-        $widget_args['widget_file'] = 'list/tpw_list.php';
-        $widget_args['display_style'] = 'list';
-        break;
-    case 'horizontal':
-    default:
-        $widget_args['widget_file'] = 'combo/tpw_combo.php';
-        $widget_args['display_style'] = 'combo';
-        break;
-}
-
-error_log('🔍 Widget args final: ' . json_encode($widget_args));
-
-// Alternative 1: Essayer avec les paramètres de widget standard
-if (class_exists('transposh_widget_class')) {
-    $widget = new transposh_widget_class();
-    $widget_instance = [
-        'title' => $title,
-        'widget_file' => $widget_args['widget_file'],
-        'show_flags' => $show_flags,
-        'show_names' => $show_names,
-        'hide_current' => $hide_current,
-        'nofollow' => $nofollow,
-    ];
-
-    ob_start();
-    $widget->widget([], $widget_instance);
-    $output = ob_get_clean();
-
-    error_log('🔍 Output via widget class: ' . var_export($output, true));
-
-    if (!empty($output)) {
-        $final_html = '<div class="wp-block-transposh-fse-language-switcher">' . $output . '</div>';
-        error_log('🟢 HTML final retourné (widget class): ' . $final_html);
-        echo $final_html;
-        return $final_html;
+        return $output;
     }
 }
 
-// Alternative 2: Fonction transposh_widget standard
-ob_start();
+/**
+ * Widget dropdown personnalisé
+ */
+if (!function_exists('create_dropdown_widget')) {
+    function create_dropdown_widget($widget_args, $show_flags, $show_names, $hide_current, $plugpath, $rel_nofollow)
+    {
+        // Vérification des données
+        if (empty($widget_args) || !is_array($widget_args)) {
+            return '<div class="transposh-dropdown-widget">Aucune langue disponible</div>';
+        }
 
-call_user_func_array('transposh_widget', [
-    $widget_args,
-    []
-]);
+        $output = '<div class="transposh-dropdown-widget">';
+        $output .= '<select name="lang" onchange="window.location.href=this.options[this.selectedIndex].value;" class="transposh-language-select">';
 
-$output = ob_get_clean();
+        // Option par défaut
+        $output .= '<option value="">' . __('Choisir une langue', 'transposh') . '</option>';
 
-error_log('🔍 Output du widget: ' . var_export($output, true));
-error_log('🔍 Longueur output: ' . strlen($output));
+        foreach ($widget_args as $langrecord) {
+            // Vérification de la structure des données
+            if (!is_array($langrecord) || !isset($langrecord['langorig'], $langrecord['url'], $langrecord['active'])) {
+                continue;
+            }
 
-if (empty($output)) {
-    error_log('🔴 transposh_widget retour vide');
+            // Masquer la langue actuelle si demandé
+            if ($hide_current && $langrecord['active']) {
+                continue;
+            }
+
+            $selected = $langrecord['active'] ? ' selected="selected"' : '';
+            $display_text = '';
+
+            if ($show_names) {
+                $display_text = $langrecord['langorig'];
+            }
+
+            $output .= '<option value="' . esc_attr($langrecord['url']) . '"' . $selected . '>' . esc_html($display_text) . '</option>';
+        }
+
+        $output .= '</select>';
+        $output .= '</div>';
+
+        return $output;
+    }
+}
+
+/**
+ * Widget vertical personnalisé
+ */
+if (!function_exists('create_vertical_widget')) {
+    function create_vertical_widget($widget_args, $show_flags, $show_names, $hide_current, $plugpath, $rel_nofollow)
+    {
+        // Vérification des données
+        if (empty($widget_args) || !is_array($widget_args)) {
+            return '<div class="transposh-vertical-widget">Aucune langue disponible</div>';
+        }
+
+        $output = '<div class="transposh-vertical-widget">';
+        $output .= '<ul class="transposh-language-list vertical">';
+
+        foreach ($widget_args as $langrecord) {
+            // Vérification de la structure des données
+            if (!is_array($langrecord) || !isset($langrecord['langorig'], $langrecord['url'], $langrecord['active'], $langrecord['flag'])) {
+                continue;
+            }
+
+            // Masquer la langue actuelle si demandé
+            if ($hide_current && $langrecord['active']) {
+                continue;
+            }
+
+            $active_class = $langrecord['active'] ? ' class="tr_active"' : '';
+            $output .= '<li' . $active_class . '>';
+            $output .= '<a href="' . esc_attr($langrecord['url']) . '"' . $rel_nofollow . '>';
+
+            if ($show_flags) {
+                $output .= '<img src="' . esc_attr($plugpath . '/img/flags/' . $langrecord['flag'] . '.png') . '" alt="' . esc_attr($langrecord['langorig']) . '" class="transposh-flag" />';
+            }
+
+            if ($show_names) {
+                $output .= '<span class="transposh-lang-name">' . esc_html($langrecord['langorig']) . '</span>';
+            }
+
+            $output .= '</a>';
+            $output .= '</li>';
+        }
+
+        $output .= '</ul>';
+        $output .= '</div>';
+
+        return $output;
+    }
+}
+
+/**
+ * Widget horizontal personnalisé
+ */
+if (!function_exists('create_horizontal_widget')) {
+    function create_horizontal_widget($widget_args, $show_flags, $show_names, $hide_current, $plugpath, $rel_nofollow)
+    {
+        // Vérification des données
+        if (empty($widget_args) || !is_array($widget_args)) {
+            return '<div class="transposh-horizontal-widget">Aucune langue disponible</div>';
+        }
+
+        $output = '<div class="transposh-horizontal-widget">';
+        $output .= '<div class="transposh-language-list horizontal">';
+
+        foreach ($widget_args as $langrecord) {
+            // Vérification de la structure des données
+            if (!is_array($langrecord) || !isset($langrecord['langorig'], $langrecord['url'], $langrecord['active'], $langrecord['flag'])) {
+                continue;
+            }
+
+            // Masquer la langue actuelle si demandé
+            if ($hide_current && $langrecord['active']) {
+                continue;
+            }
+
+            $active_class = $langrecord['active'] ? ' tr_active' : '';
+            $output .= '<a href="' . esc_attr($langrecord['url']) . '"' . $rel_nofollow . ' class="transposh-language-link' . $active_class . '">';
+
+            if ($show_flags) {
+                $output .= '<img src="' . esc_attr($plugpath . '/img/flags/' . $langrecord['flag'] . '.png') . '" alt="' . esc_attr($langrecord['langorig']) . '" class="transposh-flag" />';
+            }
+
+            if ($show_names) {
+                $output .= '<span class="transposh-lang-name">' . esc_html($langrecord['langorig']) . '</span>';
+            }
+
+            $output .= '</a>';
+        }
+
+        $output .= '</div>';
+        $output .= '</div>';
+
+        return $output;
+    }
+}
+
+// Récupération des arguments du widget Transposh
+global $my_transposh_plugin;
+if (isset($my_transposh_plugin->widget)) {
+    $clean_page = $my_transposh_plugin->get_clean_url();
+    $widget_args = $my_transposh_plugin->widget->create_widget_args($clean_page);
+
+    // Vérification que les données de langues sont valides
+    if (empty($widget_args) || !is_array($widget_args)) {
+        $html = '<div class="wp-block-transposh-fse-language-switcher" style="background: #fff3e0; padding: 10px; border: 1px solid #ff9800; color: #f57c00;">
+            <strong>⚠️ Données de langues indisponibles</strong>
+            <p>Le plugin Transposh n\'a pas pu récupérer les données de langues. Vérifiez la configuration du plugin.</p>
+        </div>';
+
+        echo $html;
+        return $html;
+    }
+
+    $widget_args['title'] = $title;
+
+    // Générer le contenu personnalisé
+    $output = create_custom_transposh_widget($widget_args, $show_flags, $show_names, $hide_current, $style, $nofollow, $title);
+
+    if (empty($output)) {
+        $html = '<div class="wp-block-transposh-fse-language-switcher" style="background: #fff3e0; padding: 10px; border: 1px solid #ff9800; color: #f57c00;">
+            <strong>⚠️ Widget Transposh vide</strong>
+            <p>Le widget Transposh n\'a retourné aucun contenu. Vérifiez la configuration du plugin.</p>
+            <p><small>Style: ' . htmlspecialchars($style) . ' | Drapeaux: ' . ($show_flags ? 'Oui' : 'Non') . ' | Noms: ' . ($show_names ? 'Oui' : 'Non') . '</small></p>
+        </div>';
+
+        return $html;
+    }
+
+    $final_html = '<div class="wp-block-transposh-fse-language-switcher transposh-style-' . $style . '">' . $output . '</div>';
+
+    // Ajout de styles CSS inline pour le rendu
+    $css_styles = '';
+    switch ($style) {
+        case 'vertical':
+            $css_styles = '<style>
+                .transposh-style-vertical .transposh-language-list.vertical { display: flex; flex-direction: column; gap: 5px; list-style: none; padding: 0; margin: 0; }
+                .transposh-style-vertical .transposh-language-list.vertical li { display: block; }
+                .transposh-style-vertical .transposh-language-link { display: flex; align-items: center; gap: 5px; text-decoration: none; }
+                .transposh-style-vertical .transposh-flag { width: 16px; height: 12px; }
+            </style>';
+            break;
+        case 'horizontal':
+            $css_styles = '<style>
+                .transposh-style-horizontal .transposh-language-list.horizontal { display: flex; flex-direction: row; gap: 10px; flex-wrap: wrap; }
+                .transposh-style-horizontal .transposh-language-link { display: inline-flex; align-items: center; gap: 5px; text-decoration: none; }
+                .transposh-style-horizontal .transposh-flag { width: 16px; height: 12px; }
+            </style>';
+            break;
+        case 'dropdown':
+            $css_styles = '<style>
+                .transposh-style-dropdown .transposh-language-select { padding: 5px; border: 1px solid #ccc; border-radius: 4px; }
+            </style>';
+            break;
+    }
+
+    $final_html = $css_styles . $final_html;
+
+    echo $final_html;
+    return $final_html;
+} else {
     $html = '<div class="wp-block-transposh-fse-language-switcher" style="background: #fff3e0; padding: 10px; border: 1px solid #ff9800; color: #f57c00;">
-        <strong>⚠️ Widget Transposh vide</strong>
-        <p>Le widget Transposh n\'a retourné aucun contenu. Vérifiez la configuration du plugin.</p>
-        <p><small>Style: ' . htmlspecialchars($style) . ' | Drapeaux: ' . ($show_flags ? 'Oui' : 'Non') . ' | Noms: ' . ($show_names ? 'Oui' : 'Non') . '</small></p>
+        <strong>⚠️ Widget Transposh non initialisé</strong>
+        <p>Le widget Transposh n\'est pas correctement initialisé.</p>
     </div>';
 
-    // Utilisation d'echo au lieu de return pour assurer l'affichage
     echo $html;
     return $html;
 }
-
-$final_html = '<div class="wp-block-transposh-fse-language-switcher transposh-style-' . $style . '">' . $output . '</div>';
-
-// Ajout de styles CSS inline pour forcer l'affichage selon le style choisi
-$css_styles = '';
-switch ($style) {
-    case 'vertical':
-        $css_styles = '<style>.transposh-style-vertical .transposh_flags { display: flex; flex-direction: column; gap: 5px; } .transposh-style-vertical .transposh_flags a { display: block; }</style>';
-        break;
-    case 'horizontal':
-        $css_styles = '<style>.transposh-style-horizontal .transposh_flags { display: flex; flex-direction: row; gap: 10px; flex-wrap: wrap; } .transposh-style-horizontal .transposh_flags a { display: inline-block; }</style>';
-        break;
-    case 'dropdown':
-        // Pour le dropdown, on laisse le comportement par défaut
-        break;
-}
-
-$final_html = $css_styles . $final_html;
-error_log('🟢 HTML final retourné: ' . $final_html);
-
-// Utilisation d'echo au lieu de return pour assurer l'affichage
-echo $final_html;
-return $final_html;
