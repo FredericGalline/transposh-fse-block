@@ -32,18 +32,45 @@
 				}
 				
 				.transposh-flag {
-					width: 16px;
-					height: 12px;
 					display: inline-block;
+					vertical-align: middle;
 					
 					&:hover {
 						opacity: 0.8;
 					}
+					
+					// Tailles par défaut (small)
+					&.transposh-flag-tiny {
+						width: 12px;
+						height: 9px;
+					}
+					
+					&.transposh-flag-small {
+						width: 16px;
+						height: 12px;
+					}
+					
+					&.transposh-flag-medium {
+						width: 24px;
+						height: 18px;
+					}
+					
+					&.transposh-flag-large {
+						width: 32px;
+						height: 24px;
+					}
+				}
+				
+				.transposh-flag-emoji {
+					display: inline-block;
+					line-height: 1;
+					vertical-align: middle;
 				}
 				
 				.transposh-flag-fallback {
-					font-size: 12px;
 					display: none;
+					line-height: 1;
+					vertical-align: middle;
 					
 					&.active {
 						display: inline-block;
@@ -163,6 +190,34 @@
 				font-size: 13px;
 				color: #555;
 			}
+		}
+	}
+	
+	// Styles spécifiques pour les différentes librairies de drapeaux
+	&[data-flag-library="twemoji"] {
+		.transposh-flag {
+			// Carré pour Twemoji
+			&.transposh-flag-tiny { height: 12px; }
+			&.transposh-flag-small { height: 16px; }
+			&.transposh-flag-medium { height: 24px; }
+			&.transposh-flag-large { height: 32px; }
+		}
+	}
+	
+	&[data-flag-library="circle-flags"] {
+		.transposh-flag {
+			// Carré pour drapeaux circulaires
+			&.transposh-flag-tiny { height: 12px; border-radius: 50%; }
+			&.transposh-flag-small { height: 16px; border-radius: 50%; }
+			&.transposh-flag-medium { height: 24px; border-radius: 50%; }
+			&.transposh-flag-large { height: 32px; border-radius: 50%; }
+		}
+	}
+	
+	&[data-flag-library="rounded-flags"] {
+		.transposh-flag {
+			// Coins arrondis pour les drapeaux PNG
+			border-radius: 2px;
 		}
 	}
 }

@@ -46,6 +46,28 @@
     "showEditTranslation": {
       "type": "boolean",
       "default": true
+    },
+    "flagLibrary": {
+      "type": "string",
+      "default": "flagcdn",
+      "enum": [
+        "flagcdn",
+        "flagicons",
+        "emoji",
+        "twemoji",
+        "circle-flags",
+        "rounded-flags"
+      ]
+    },
+    "flagSize": {
+      "type": "string",
+      "default": "small",
+      "enum": [
+        "tiny",
+        "small",
+        "medium",
+        "large"
+      ]
     }
   },
   "supports": {

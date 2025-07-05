@@ -38,73 +38,213 @@ import "./editor.scss";
 
 /**
  * Configuration des langues réalistes basées sur les langues communes de Transposh
+ * Avec support pour différentes librairies d'icônes de drapeaux
  */
 const TRANSPOSH_LANGUAGES = {
 	fr: {
 		code: "fr",
 		name: "Français",
-		flag: "https://flagcdn.com/w20/fr.png",
 		emoji: "🇫🇷",
+		flags: {
+			flagcdn: "https://flagcdn.com/w20/fr.png",
+			flagicons: "https://flagicons.lipis.dev/flags/4x3/fr.svg",
+			twemoji:
+				"https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/svg/1f1eb-1f1f7.svg",
+			"circle-flags": "https://hatscripts.github.io/circle-flags/flags/fr.svg",
+			"rounded-flags": "https://flagcdn.com/w20/fr.png",
+		},
 	},
 	en: {
 		code: "en",
 		name: "English",
-		flag: "https://flagcdn.com/w20/us.png",
 		emoji: "🇺🇸",
+		flags: {
+			flagcdn: "https://flagcdn.com/w20/us.png",
+			flagicons: "https://flagicons.lipis.dev/flags/4x3/us.svg",
+			twemoji:
+				"https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/svg/1f1fa-1f1f8.svg",
+			"circle-flags": "https://hatscripts.github.io/circle-flags/flags/us.svg",
+			"rounded-flags": "https://flagcdn.com/w20/us.png",
+		},
 	},
 	es: {
 		code: "es",
 		name: "Español",
-		flag: "https://flagcdn.com/w20/es.png",
 		emoji: "🇪🇸",
+		flags: {
+			flagcdn: "https://flagcdn.com/w20/es.png",
+			flagicons: "https://flagicons.lipis.dev/flags/4x3/es.svg",
+			twemoji:
+				"https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/svg/1f1ea-1f1f8.svg",
+			"circle-flags": "https://hatscripts.github.io/circle-flags/flags/es.svg",
+			"rounded-flags": "https://flagcdn.com/w20/es.png",
+		},
 	},
 	de: {
 		code: "de",
 		name: "Deutsch",
-		flag: "https://flagcdn.com/w20/de.png",
 		emoji: "🇩🇪",
+		flags: {
+			flagcdn: "https://flagcdn.com/w20/de.png",
+			flagicons: "https://flagicons.lipis.dev/flags/4x3/de.svg",
+			twemoji:
+				"https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/svg/1f1e9-1f1ea.svg",
+			"circle-flags": "https://hatscripts.github.io/circle-flags/flags/de.svg",
+			"rounded-flags": "https://flagcdn.com/w20/de.png",
+		},
 	},
 	it: {
 		code: "it",
 		name: "Italiano",
-		flag: "https://flagcdn.com/w20/it.png",
 		emoji: "🇮🇹",
+		flags: {
+			flagcdn: "https://flagcdn.com/w20/it.png",
+			flagicons: "https://flagicons.lipis.dev/flags/4x3/it.svg",
+			twemoji:
+				"https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/svg/1f1ee-1f1f9.svg",
+			"circle-flags": "https://hatscripts.github.io/circle-flags/flags/it.svg",
+			"rounded-flags": "https://flagcdn.com/w20/it.png",
+		},
 	},
 	pt: {
 		code: "pt",
 		name: "Português",
-		flag: "https://flagcdn.com/w20/pt.png",
 		emoji: "🇵🇹",
+		flags: {
+			flagcdn: "https://flagcdn.com/w20/pt.png",
+			flagicons: "https://flagicons.lipis.dev/flags/4x3/pt.svg",
+			twemoji:
+				"https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/svg/1f1f5-1f1f9.svg",
+			"circle-flags": "https://hatscripts.github.io/circle-flags/flags/pt.svg",
+			"rounded-flags": "https://flagcdn.com/w20/pt.png",
+		},
 	},
 	nl: {
 		code: "nl",
 		name: "Nederlands",
-		flag: "https://flagcdn.com/w20/nl.png",
 		emoji: "🇳🇱",
+		flags: {
+			flagcdn: "https://flagcdn.com/w20/nl.png",
+			flagicons: "https://flagicons.lipis.dev/flags/4x3/nl.svg",
+			twemoji:
+				"https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/svg/1f1f3-1f1f1.svg",
+			"circle-flags": "https://hatscripts.github.io/circle-flags/flags/nl.svg",
+			"rounded-flags": "https://flagcdn.com/w20/nl.png",
+		},
 	},
 	ru: {
 		code: "ru",
 		name: "Русский",
-		flag: "https://flagcdn.com/w20/ru.png",
 		emoji: "🇷🇺",
+		flags: {
+			flagcdn: "https://flagcdn.com/w20/ru.png",
+			flagicons: "https://flagicons.lipis.dev/flags/4x3/ru.svg",
+			twemoji:
+				"https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/svg/1f1f7-1f1fa.svg",
+			"circle-flags": "https://hatscripts.github.io/circle-flags/flags/ru.svg",
+			"rounded-flags": "https://flagcdn.com/w20/ru.png",
+		},
 	},
 	zh: {
 		code: "zh",
 		name: "中文",
-		flag: "https://flagcdn.com/w20/cn.png",
 		emoji: "🇨🇳",
+		flags: {
+			flagcdn: "https://flagcdn.com/w20/cn.png",
+			flagicons: "https://flagicons.lipis.dev/flags/4x3/cn.svg",
+			twemoji:
+				"https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/svg/1f1e8-1f1f3.svg",
+			"circle-flags": "https://hatscripts.github.io/circle-flags/flags/cn.svg",
+			"rounded-flags": "https://flagcdn.com/w20/cn.png",
+		},
 	},
 	ja: {
 		code: "ja",
 		name: "日本語",
-		flag: "https://flagcdn.com/w20/jp.png",
 		emoji: "🇯🇵",
+		flags: {
+			flagcdn: "https://flagcdn.com/w20/jp.png",
+			flagicons: "https://flagicons.lipis.dev/flags/4x3/jp.svg",
+			twemoji:
+				"https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/svg/1f1ef-1f1f5.svg",
+			"circle-flags": "https://hatscripts.github.io/circle-flags/flags/jp.svg",
+			"rounded-flags": "https://flagcdn.com/w20/jp.png",
+		},
 	},
 	ar: {
 		code: "ar",
 		name: "العربية",
-		flag: "https://flagcdn.com/w20/sa.png",
 		emoji: "🇸🇦",
+		flags: {
+			flagcdn: "https://flagcdn.com/w20/sa.png",
+			flagicons: "https://flagicons.lipis.dev/flags/4x3/sa.svg",
+			twemoji:
+				"https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/svg/1f1f8-1f1e6.svg",
+			"circle-flags": "https://hatscripts.github.io/circle-flags/flags/sa.svg",
+			"rounded-flags": "https://flagcdn.com/w20/sa.png",
+		},
+	},
+};
+
+/**
+ * Configuration des librairies d'icônes de drapeaux
+ */
+const FLAG_LIBRARIES = {
+	flagcdn: {
+		name: __("FlagCDN (PNG)", "transposh"),
+		description: __("Drapeaux PNG haute qualité", "transposh"),
+		format: "png",
+	},
+	flagicons: {
+		name: __("Flag Icons (SVG)", "transposh"),
+		description: __("Drapeaux SVG vectoriels", "transposh"),
+		format: "svg",
+	},
+	emoji: {
+		name: __("Emoji natifs", "transposh"),
+		description: __("Emojis de drapeaux du système", "transposh"),
+		format: "emoji",
+	},
+	twemoji: {
+		name: __("Twemoji (SVG)", "transposh"),
+		description: __("Emojis Twitter en SVG", "transposh"),
+		format: "svg",
+	},
+	"circle-flags": {
+		name: __("Circle Flags (SVG)", "transposh"),
+		description: __("Drapeaux circulaires en SVG", "transposh"),
+		format: "svg",
+	},
+	"rounded-flags": {
+		name: __("Rounded Flags (PNG)", "transposh"),
+		description: __("Drapeaux avec coins arrondis", "transposh"),
+		format: "png",
+	},
+};
+
+/**
+ * Configuration des tailles de drapeaux
+ */
+const FLAG_SIZES = {
+	tiny: {
+		name: __("Très petit", "transposh"),
+		dimensions: { width: 12, height: 9 },
+		description: __("12×9px - Idéal pour les espaces restreints", "transposh"),
+	},
+	small: {
+		name: __("Petit", "transposh"),
+		dimensions: { width: 16, height: 12 },
+		description: __("16×12px - Taille recommandée", "transposh"),
+	},
+	medium: {
+		name: __("Moyen", "transposh"),
+		dimensions: { width: 24, height: 18 },
+		description: __("24×18px - Bonne visibilité", "transposh"),
+	},
+	large: {
+		name: __("Grand", "transposh"),
+		dimensions: { width: 32, height: 24 },
+		description: __("32×24px - Maximum recommandé", "transposh"),
 	},
 };
 
@@ -125,6 +265,8 @@ export default function Edit({ attributes, setAttributes }) {
 		nofollow,
 		title,
 		showEditTranslation,
+		flagLibrary,
+		flagSize,
 	} = attributes;
 
 	const blockProps = useBlockProps();
@@ -173,6 +315,22 @@ export default function Edit({ attributes, setAttributes }) {
 		const Element = isSpan ? "span" : "a";
 		const className = `transposh-language-link ${isActive ? "tr_active" : ""}`;
 
+		// Obtenir l'URL du drapeau selon la librairie sélectionnée
+		const getFlagUrl = (lang, library) => {
+			if (library === "emoji") {
+				return null; // Pas d'image pour les emojis
+			}
+			return lang.flags[library] || lang.flags.flagcdn;
+		};
+
+		// Obtenir les dimensions selon la taille sélectionnée
+		const getFlagDimensions = (size) => {
+			return FLAG_SIZES[size] || FLAG_SIZES.small;
+		};
+
+		const flagUrl = getFlagUrl(language, flagLibrary);
+		const flagDimensions = getFlagDimensions(flagSize);
+
 		return (
 			<Element
 				key={language.code}
@@ -181,21 +339,50 @@ export default function Edit({ attributes, setAttributes }) {
 				onClick={!isSpan ? (e) => e.preventDefault() : undefined}
 			>
 				{showFlags && (
-					<img
-						src={language.flag}
-						alt={language.name}
-						className="transposh-flag"
-						onError={(e) => {
-							// Fallback vers l'emoji si l'image ne charge pas
-							e.target.style.display = "none";
-							e.target.nextSibling.style.display = "inline";
-						}}
-					/>
-				)}
-				{showFlags && (
-					<span className="transposh-flag-fallback" style={{ display: "none" }}>
-						{language.emoji}
-					</span>
+					<>
+						{flagLibrary === "emoji" ? (
+							<span
+								className="transposh-flag-emoji"
+								style={{
+									fontSize: `${flagDimensions.dimensions.width}px`,
+									lineHeight: 1,
+									verticalAlign: "middle",
+								}}
+							>
+								{language.emoji}
+							</span>
+						) : (
+							<img
+								src={flagUrl}
+								alt={language.name}
+								className={`transposh-flag transposh-flag-${flagSize}`}
+								style={{
+									width: `${flagDimensions.dimensions.width}px`,
+									height: `${flagDimensions.dimensions.height}px`,
+									display: "inline-block",
+									verticalAlign: "middle",
+								}}
+								onError={(e) => {
+									// Fallback vers l'emoji si l'image ne charge pas
+									e.target.style.display = "none";
+									e.target.nextSibling.style.display = "inline";
+								}}
+							/>
+						)}
+						{flagLibrary !== "emoji" && (
+							<span
+								className="transposh-flag-fallback"
+								style={{
+									display: "none",
+									fontSize: `${flagDimensions.dimensions.width}px`,
+									lineHeight: 1,
+									verticalAlign: "middle",
+								}}
+							>
+								{language.emoji}
+							</span>
+						)}
+					</>
 				)}
 				{showNames && (
 					<span className="transposh-lang-name">{language.name}</span>
@@ -243,6 +430,52 @@ export default function Edit({ attributes, setAttributes }) {
 						)}
 					/>
 
+					{showFlags && (
+						<>
+							<SelectControl
+								label={__("Librairie de drapeaux", "transposh")}
+								value={flagLibrary}
+								options={[
+									{ label: FLAG_LIBRARIES.flagcdn.name, value: "flagcdn" },
+									{ label: FLAG_LIBRARIES.flagicons.name, value: "flagicons" },
+									{ label: FLAG_LIBRARIES.emoji.name, value: "emoji" },
+									{ label: FLAG_LIBRARIES.twemoji.name, value: "twemoji" },
+									{
+										label: FLAG_LIBRARIES["circle-flags"].name,
+										value: "circle-flags",
+									},
+									{
+										label: FLAG_LIBRARIES["rounded-flags"].name,
+										value: "rounded-flags",
+									},
+								]}
+								onChange={(value) => setAttributes({ flagLibrary: value })}
+								help={
+									FLAG_LIBRARIES[flagLibrary]?.description ||
+									__("Choisissez le style de drapeaux", "transposh")
+								}
+							/>
+
+							{flagLibrary !== "emoji" && (
+								<SelectControl
+									label={__("Taille des drapeaux", "transposh")}
+									value={flagSize}
+									options={[
+										{ label: FLAG_SIZES.tiny.name, value: "tiny" },
+										{ label: FLAG_SIZES.small.name, value: "small" },
+										{ label: FLAG_SIZES.medium.name, value: "medium" },
+										{ label: FLAG_SIZES.large.name, value: "large" },
+									]}
+									onChange={(value) => setAttributes({ flagSize: value })}
+									help={
+										FLAG_SIZES[flagSize]?.description ||
+										__("Choisissez la taille des drapeaux", "transposh")
+									}
+								/>
+							)}
+						</>
+					)}
+
 					<ToggleControl
 						label={__("Afficher les noms de langues", "transposh")}
 						checked={showNames}
@@ -280,7 +513,11 @@ export default function Edit({ attributes, setAttributes }) {
 			</InspectorControls>
 
 			<div {...blockProps}>
-				<div className={getWidgetClasses()}>
+				<div
+					className={getWidgetClasses()}
+					data-flag-library={flagLibrary}
+					data-flag-size={flagSize}
+				>
 					{/* Titre du widget */}
 					{title && <div className="widgettitle">{title}</div>}
 
@@ -291,7 +528,9 @@ export default function Edit({ attributes, setAttributes }) {
 								<option>{__("Choisir une langue", "transposh")}</option>
 								{siteLanguages.map((language) => (
 									<option key={language.code} value={language.code}>
-										{showFlags && `${language.emoji} `}
+										{showFlags &&
+											flagLibrary === "emoji" &&
+											`${language.emoji} `}
 										{showNames && language.name}
 										{!showFlags && !showNames && language.code.toUpperCase()}
 									</option>

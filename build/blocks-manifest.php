@@ -49,6 +49,28 @@ return array(
 			'showEditTranslation' => array(
 				'type' => 'boolean',
 				'default' => true
+			),
+			'flagLibrary' => array(
+				'type' => 'string',
+				'default' => 'flagcdn',
+				'enum' => array(
+					'flagcdn',
+					'flagicons',
+					'emoji',
+					'twemoji',
+					'circle-flags',
+					'rounded-flags'
+				)
+			),
+			'flagSize' => array(
+				'type' => 'string',
+				'default' => 'small',
+				'enum' => array(
+					'tiny',
+					'small',
+					'medium',
+					'large'
+				)
 			)
 		),
 		'supports' => array(

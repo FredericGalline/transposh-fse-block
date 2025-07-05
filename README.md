@@ -9,6 +9,7 @@ This block allows easy integration of the Transposh language selector into the G
 ## Features
 
 - **3 display styles**: Horizontal, Vertical, Dropdown menu
+- **4 flag libraries**: FlagCDN (PNG), Flag Icons (SVG), Emoji natives, Twemoji (SVG)
 - **Complete customization**: Flags, language names, custom title
 - **Edit mode**: "Edit Translation" checkbox for manual translation
 - **Advanced options**: Hide current language, nofollow attribute
@@ -69,10 +70,22 @@ This block can be integrated directly into the Transposh plugin by:
 | **Widget Title** | Text | Empty | Title displayed above the language selector |
 | **Display Style** | Select | Horizontal | Horizontal, Vertical, or Dropdown menu |
 | **Show Flags** | Toggle | Yes | Display country flags |
+| **Flag Library** | Select | FlagCDN | Choose flag icons library (when flags enabled) |
 | **Show Language Names** | Toggle | Yes | Display language names as text |
 | **Hide Current Language** | Toggle | No | Hide the currently selected language |
 | **Add rel='nofollow'** | Toggle | Yes | Add nofollow attribute to language links |
 | **Show 'Edit Translation'** | Toggle | Yes | Display edit mode checkbox |
+
+### Flag Libraries
+
+The block supports 4 different flag icon libraries:
+
+| Library | Type | Source | Best For |
+|---------|------|---------|----------|
+| **FlagCDN** | PNG | flagcdn.com | General use, fast loading |
+| **Flag Icons** | SVG | flagicons.lipis.dev | Modern designs, scalability |
+| **Emoji** | Unicode | Native system | Performance, compatibility |
+| **Twemoji** | SVG | Twitter emojis | Visual consistency |
 
 ## Requirements
 
@@ -147,6 +160,15 @@ npm run start
 ## Contribution
 
 This block was developed to enhance the Transposh plugin's integration with modern WordPress block editing. It could be integrated into a future version of Transposh to provide users with a native block-based language switching experience.
+
+## Documentation
+
+For detailed technical documentation, troubleshooting guides, and development information, see the [`docs/`](docs/) folder:
+
+- **[Technical Documentation](docs/README.md)** - Complete technical documentation
+- **[Flag Libraries Guide](docs/GUIDE_LIBRAIRIES_DRAPEAUX.md)** - Guide for flag icon libraries
+- **[Integration Guide](docs/INTEGRATION.md)** - Integration instructions
+- **[Troubleshooting](docs/FIX_CONFIG_FILE_ERROR.md)** - Common issues and fixes
 
 ## License
 

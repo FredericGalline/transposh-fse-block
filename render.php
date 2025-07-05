@@ -9,6 +9,9 @@
  * @return string HTML output
  */
 
+// Inclure la configuration des librairies d'icônes
+require_once dirname(__FILE__) . '/flag-libraries-config.php';
+
 // Vérification de l'existence du plugin Transposh
 if (! function_exists('transposh_widget') || ! isset($GLOBALS['my_transposh_plugin'])) {
     $html = '<div class="wp-block-transposh-fse-language-switcher" style="background: #ffebee; padding: 10px; border: 1px solid #f44336; color: #d32f2f;">
@@ -40,12 +43,63 @@ $style = isset($attributes['style']) ? $attributes['style'] : 'horizontal';
 $nofollow = isset($attributes['nofollow']) ? $attributes['nofollow'] : true;
 $title = isset($attributes['title']) ? $attributes['title'] : '';
 $show_edit_translation = isset($attributes['showEditTranslation']) ? $attributes['showEditTranslation'] : true;
+$flag_library = isset($attributes['flagLibrary']) ? $attributes['flagLibrary'] : 'flagcdn';
+$flag_size = isset($attributes['flagSize']) ? $attributes['flagSize'] : 'small';
+
+/**
+ * Fonction pour rendre un drapeau selon la librairie choisie
+ */
+if (!function_exists('render_flag')) {
+    function render_flag($flag_code, $lang_name, $flag_library, $flag_size)
+    {
+        $dimensions = get_transposh_flag_dimensions($flag_size);
+        $country_code = get_country_code_from_lang($flag_code);
+        $classes = "transposh-flag transposh-flag-{$flag_library} transposh-flag-{$flag_size}";
+
+        // Styles inline pour les dimensions
+        $style = sprintf('width: %s; height: %s;', $dimensions['width'], $dimensions['height']);
+
+        // Ajout de styles spécifiques selon la librairie
+        if ($flag_library === 'circle-flags') {
+            $style .= ' border-radius: 50%;';
+        } elseif ($flag_library === 'rounded-flags') {
+            $style .= ' border-radius: 4px;';
+        }
+
+        switch ($flag_library) {
+            case 'emoji':
+                $emoji_map = get_country_emoji_map();
+                $emoji = $emoji_map[$country_code] ?? '🏳️';
+                return '<span class="' . $classes . '" style="' . $style . ' font-size: ' . $dimensions['width'] . '; line-height: ' . $dimensions['height'] . ';" title="' . esc_attr($lang_name) . '">' . $emoji . '</span>';
+
+            case 'flagcdn':
+            case 'flagicons':
+            case 'circle-flags':
+            case 'rounded-flags':
+            case 'twemoji':
+                $flag_url = get_transposh_flag_url($country_code, $flag_library, $flag_size);
+                if ($flag_url) {
+                    return '<img src="' . esc_attr($flag_url) . '" alt="' . esc_attr($lang_name) . '" class="' . $classes . '" style="' . $style . '" />';
+                }
+                break;
+        }
+
+        // Fallback vers le drapeau par défaut de Transposh
+        global $my_transposh_plugin;
+        if (isset($my_transposh_plugin)) {
+            $plugpath = parse_url($my_transposh_plugin->transposh_plugin_url, PHP_URL_PATH);
+            return '<img src="' . esc_attr($plugpath . '/img/flags/' . $flag_code . '.png') . '" alt="' . esc_attr($lang_name) . '" class="' . $classes . '" style="' . $style . '" />';
+        }
+
+        return '';
+    }
+}
 
 /**
  * Fonction pour créer un widget personnalisé avec les paramètres du bloc
  */
 if (!function_exists('create_custom_transposh_widget')) {
-    function create_custom_transposh_widget($widget_args, $show_flags, $show_names, $hide_current, $style, $nofollow, $title = '', $show_edit_translation = true)
+    function create_custom_transposh_widget($widget_args, $show_flags, $show_names, $hide_current, $style, $nofollow, $title = '', $show_edit_translation = true, $flag_library = 'flagcdn', $flag_size = 'small')
     {
         global $my_transposh_plugin;
 
@@ -63,14 +117,14 @@ if (!function_exists('create_custom_transposh_widget')) {
         // Générer le contenu selon le style
         switch ($style) {
             case 'dropdown':
-                $output .= create_dropdown_widget($widget_args, $show_flags, $show_names, $hide_current, $plugpath, $rel_nofollow);
+                $output .= create_dropdown_widget($widget_args, $show_flags, $show_names, $hide_current, $plugpath, $rel_nofollow, $flag_library, $flag_size);
                 break;
             case 'vertical':
-                $output .= create_vertical_widget($widget_args, $show_flags, $show_names, $hide_current, $plugpath, $rel_nofollow);
+                $output .= create_vertical_widget($widget_args, $show_flags, $show_names, $hide_current, $plugpath, $rel_nofollow, $flag_library, $flag_size);
                 break;
             case 'horizontal':
             default:
-                $output .= create_horizontal_widget($widget_args, $show_flags, $show_names, $hide_current, $plugpath, $rel_nofollow);
+                $output .= create_horizontal_widget($widget_args, $show_flags, $show_names, $hide_current, $plugpath, $rel_nofollow, $flag_library, $flag_size);
                 break;
         }
 
@@ -87,7 +141,7 @@ if (!function_exists('create_custom_transposh_widget')) {
  * Widget dropdown personnalisé
  */
 if (!function_exists('create_dropdown_widget')) {
-    function create_dropdown_widget($widget_args, $show_flags, $show_names, $hide_current, $plugpath, $rel_nofollow)
+    function create_dropdown_widget($widget_args, $show_flags, $show_names, $hide_current, $plugpath, $rel_nofollow, $flag_library = 'flagcdn', $flag_size = 'small')
     {
         // Vérification des données
         if (empty($widget_args) || !is_array($widget_args)) {
@@ -132,7 +186,7 @@ if (!function_exists('create_dropdown_widget')) {
  * Widget vertical personnalisé
  */
 if (!function_exists('create_vertical_widget')) {
-    function create_vertical_widget($widget_args, $show_flags, $show_names, $hide_current, $plugpath, $rel_nofollow)
+    function create_vertical_widget($widget_args, $show_flags, $show_names, $hide_current, $plugpath, $rel_nofollow, $flag_library = 'flagcdn', $flag_size = 'small')
     {
         // Vérification des données
         if (empty($widget_args) || !is_array($widget_args)) {
@@ -155,10 +209,10 @@ if (!function_exists('create_vertical_widget')) {
 
             $active_class = $langrecord['active'] ? ' class="tr_active"' : '';
             $output .= '<li' . $active_class . '>';
-            $output .= '<a href="' . esc_attr($langrecord['url']) . '"' . $rel_nofollow . '>';
+            $output .= '<a href="' . esc_attr($langrecord['url']) . '"' . $rel_nofollow . ' class="transposh-language-link">';
 
             if ($show_flags) {
-                $output .= '<img src="' . esc_attr($plugpath . '/img/flags/' . $langrecord['flag'] . '.png') . '" alt="' . esc_attr($langrecord['langorig']) . '" class="transposh-flag" />';
+                $output .= render_flag($langrecord['flag'], $langrecord['langorig'], $flag_library, $flag_size);
             }
 
             if ($show_names) {
@@ -180,7 +234,7 @@ if (!function_exists('create_vertical_widget')) {
  * Widget horizontal personnalisé
  */
 if (!function_exists('create_horizontal_widget')) {
-    function create_horizontal_widget($widget_args, $show_flags, $show_names, $hide_current, $plugpath, $rel_nofollow)
+    function create_horizontal_widget($widget_args, $show_flags, $show_names, $hide_current, $plugpath, $rel_nofollow, $flag_library = 'flagcdn', $flag_size = 'small')
     {
         // Vérification des données
         if (empty($widget_args) || !is_array($widget_args)) {
@@ -205,7 +259,7 @@ if (!function_exists('create_horizontal_widget')) {
             $output .= '<a href="' . esc_attr($langrecord['url']) . '"' . $rel_nofollow . ' class="transposh-language-link' . $active_class . '">';
 
             if ($show_flags) {
-                $output .= '<img src="' . esc_attr($plugpath . '/img/flags/' . $langrecord['flag'] . '.png') . '" alt="' . esc_attr($langrecord['langorig']) . '" class="transposh-flag" />';
+                $output .= render_flag($langrecord['flag'], $langrecord['langorig'], $flag_library, $flag_size);
             }
 
             if ($show_names) {
@@ -293,7 +347,7 @@ if (isset($my_transposh_plugin->widget)) {
     $widget_args['title'] = $title;
 
     // Générer le contenu personnalisé
-    $output = create_custom_transposh_widget($widget_args, $show_flags, $show_names, $hide_current, $style, $nofollow, $title, $show_edit_translation);
+    $output = create_custom_transposh_widget($widget_args, $show_flags, $show_names, $hide_current, $style, $nofollow, $title, $show_edit_translation, $flag_library, $flag_size);
 
     if (empty($output)) {
         $html = '<div class="wp-block-transposh-fse-language-switcher" style="background: #fff3e0; padding: 10px; border: 1px solid #ff9800; color: #f57c00;">
@@ -305,28 +359,51 @@ if (isset($my_transposh_plugin->widget)) {
         return $html;
     }
 
-    $final_html = '<div class="wp-block-transposh-fse-language-switcher transposh-style-' . $style . '">' . $output . '</div>';
+    $final_html = '<div class="wp-block-transposh-fse-language-switcher transposh-style-' . $style . '" data-flag-library="' . esc_attr($flag_library) . '" data-flag-size="' . esc_attr($flag_size) . '">' . $output . '</div>';
 
     // Ajout de styles CSS inline pour le rendu
+    $dimensions = get_transposh_flag_dimensions($flag_size);
     $css_styles = '';
+
+    // Styles généraux pour les drapeaux
+    $css_styles .= '<style>
+        .transposh-flag {
+            display: inline-block;
+            vertical-align: middle;
+            margin-right: 5px;
+        }
+        
+        .transposh-flag-tiny { width: 16px; height: 12px; }
+        .transposh-flag-small { width: 20px; height: 15px; }
+        .transposh-flag-medium { width: 32px; height: 24px; }
+        .transposh-flag-large { width: 48px; height: 36px; }
+        
+        .transposh-flag-circle-flags { border-radius: 50%; }
+        .transposh-flag-rounded-flags { border-radius: 4px; }
+        .transposh-flag-emoji { 
+            font-style: normal; 
+            font-variant: normal; 
+            font-weight: normal; 
+            line-height: 1; 
+        }
+    </style>';
+
     switch ($style) {
         case 'vertical':
-            $css_styles = '<style>
+            $css_styles .= '<style>
                 .transposh-style-vertical .transposh-language-list.vertical { display: flex; flex-direction: column; gap: 5px; list-style: none; padding: 0; margin: 0; }
                 .transposh-style-vertical .transposh-language-list.vertical li { display: block; }
                 .transposh-style-vertical .transposh-language-link { display: flex; align-items: center; gap: 5px; text-decoration: none; }
-                .transposh-style-vertical .transposh-flag { width: 16px; height: 12px; }
             </style>';
             break;
         case 'horizontal':
-            $css_styles = '<style>
+            $css_styles .= '<style>
                 .transposh-style-horizontal .transposh-language-list.horizontal { display: flex; flex-direction: row; gap: 10px; flex-wrap: wrap; }
                 .transposh-style-horizontal .transposh-language-link { display: inline-flex; align-items: center; gap: 5px; text-decoration: none; }
-                .transposh-style-horizontal .transposh-flag { width: 16px; height: 12px; }
             </style>';
             break;
         case 'dropdown':
-            $css_styles = '<style>
+            $css_styles .= '<style>
                 .transposh-style-dropdown .transposh-language-select { padding: 5px; border: 1px solid #ccc; border-radius: 4px; }
             </style>';
             break;
