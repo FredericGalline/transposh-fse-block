@@ -24,6 +24,11 @@ import {
 } from "@wordpress/components";
 
 /**
+ * ServerSideRender for WYSIWYG display
+ */
+import ServerSideRender from "@wordpress/server-side-render";
+
+/**
  * Lets webpack process CSS, SASS or SCSS files referenced in JavaScript files.
  * Those files can contain any CSS code that gets applied to the editor.
  *
@@ -127,97 +132,48 @@ export default function Edit({ attributes, setAttributes }) {
 			</InspectorControls>
 
 			<div {...blockProps}>
-				<div
-					style={{
-						border: "2px dashed #ccc",
-						padding: "20px",
-						textAlign: "center",
-						backgroundColor: "#f9f9f9",
-						borderRadius: "4px",
-					}}
-				>
-					<div style={{ fontSize: "24px", marginBottom: "10px" }}>🌐</div>
-					<div style={{ fontWeight: "bold", marginBottom: "8px" }}>
-						{title || __("Widget Transposh", "transposh")}
-					</div>
-					<div
-						style={{ fontSize: "12px", color: "#666", marginBottom: "15px" }}
-					>
-						{__("Aperçu - Le rendu réel sera visible sur le site", "transposh")}
-					</div>
-
-					{/* Prévisualisation plus réaliste */}
-					<div style={{ marginBottom: "10px" }}>
-						{style === "dropdown" && (
-							<select style={{ padding: "5px", borderRadius: "4px" }}>
-								<option>🇫🇷 Français</option>
-								<option>🇬🇧 English</option>
-								<option>🇪🇸 Español</option>
-							</select>
-						)}
-
-						{style === "horizontal" && (
-							<div
-								style={{
-									display: "flex",
-									gap: "10px",
-									justifyContent: "center",
-								}}
-							>
-								{showFlags && <span>🇫🇷</span>}
-								{showNames && <span>Français</span>}
-								{(showFlags || showNames) && <span>|</span>}
-								{showFlags && <span>🇬🇧</span>}
-								{showNames && <span>English</span>}
-								{(showFlags || showNames) && <span>|</span>}
-								{showFlags && <span>🇪🇸</span>}
-								{showNames && <span>Español</span>}
+				<ServerSideRender
+					block="transposh/fse-language-switcher"
+					attributes={attributes}
+					EmptyResponsePlaceholder={() => (
+						<div
+							style={{
+								border: "2px dashed #ccc",
+								padding: "20px",
+								textAlign: "center",
+								backgroundColor: "#f9f9f9",
+								borderRadius: "4px",
+							}}
+						>
+							<div style={{ fontSize: "24px", marginBottom: "10px" }}>🌐</div>
+							<div style={{ fontWeight: "bold", marginBottom: "8px" }}>
+								{title || __("Widget Transposh", "transposh")}
 							</div>
-						)}
-
-						{style === "vertical" && (
-							<div
-								style={{
-									display: "flex",
-									flexDirection: "column",
-									gap: "5px",
-									alignItems: "center",
-								}}
-							>
-								<div>
-									{showFlags && <span>🇫🇷</span>}{" "}
-									{showNames && <span>Français</span>}
-								</div>
-								<div>
-									{showFlags && <span>🇬🇧</span>}{" "}
-									{showNames && <span>English</span>}
-								</div>
-								<div>
-									{showFlags && <span>🇪🇸</span>}{" "}
-									{showNames && <span>Español</span>}
-								</div>
+							<div style={{ fontSize: "12px", color: "#666" }}>
+								{__("Plugin Transposh requis pour l'affichage", "transposh")}
 							</div>
-						)}
-					</div>
-
-					<div style={{ fontSize: "11px", color: "#999" }}>
-						{__("Style:", "transposh")} <strong>{style}</strong> |
-						{__("Drapeaux:", "transposh")}{" "}
-						<strong>
-							{showFlags ? __("Oui", "transposh") : __("Non", "transposh")}
-						</strong>{" "}
-						|{__("Noms:", "transposh")}{" "}
-						<strong>
-							{showNames ? __("Oui", "transposh") : __("Non", "transposh")}
-						</strong>
-						{hideCurrentLanguage && (
-							<span> | {__("Langue actuelle masquée", "transposh")}</span>
-						)}
-						{showEditTranslation && (
-							<span> | ✏️ {__("Edit Translation", "transposh")}</span>
-						)}
-					</div>
-				</div>
+						</div>
+					)}
+					LoadingResponsePlaceholder={() => (
+						<div
+							style={{
+								border: "2px dashed #ccc",
+								padding: "20px",
+								textAlign: "center",
+								backgroundColor: "#f9f9f9",
+								borderRadius: "4px",
+							}}
+						>
+							<div style={{ fontSize: "24px", marginBottom: "10px" }}>🌐</div>
+							<div style={{ fontWeight: "bold", marginBottom: "8px" }}>
+								{title || __("Widget Transposh", "transposh")}
+							</div>
+							<div style={{ fontSize: "12px", color: "#666" }}>
+								{__("Chargement...", "transposh")}
+							</div>
+						</div>
+					)}
+				/>
 			</div>
 		</>
 	);

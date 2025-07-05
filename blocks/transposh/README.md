@@ -13,6 +13,7 @@ Ce bloc permet d'intégrer facilement le sélecteur de langues Transposh dans l'
 - **Mode édition** : Checkbox "Edit Translation" pour la traduction manuelle
 - **Options avancées** : Masquage de la langue actuelle, attribut nofollow
 - **Compatible FSE** : Utilisable dans l'éditeur de site WordPress
+- **WYSIWYG** : Affichage identique dans l'éditeur et sur le site
 - **Robuste** : Gestion d'erreurs et vérifications de sécurité
 
 ## Installation
