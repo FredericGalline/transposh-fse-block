@@ -1,9 +1,142 @@
 /**
- * The following styles get applied inside the editor only.
- *
- * Replace them with your own styles or remove the file completely.
+ * Styles pour l'aperçu du bloc Transposh dans l'éditeur
+ * Ces styles reproduisent l'apparence du frontend
  */
 
 .wp-block-create-block-transposh {
-	border: 1px dotted #f00;
+	/* Pas de bordure artificielle, style naturel */
+	
+	.widgettitle {
+		font-weight: bold;
+		margin-bottom: 10px;
+		font-size: 1.1em;
+	}
+	
+	/* Styles pour le sélecteur horizontal */
+	.transposh-horizontal-widget {
+		.transposh-language-list {
+			display: flex;
+			gap: 8px;
+			align-items: center;
+			flex-wrap: wrap;
+			
+			.transposh-language-link {
+				display: inline-flex;
+				align-items: center;
+				gap: 4px;
+				text-decoration: none;
+				color: inherit;
+				
+				&.tr_active {
+					font-weight: bold;
+				}
+				
+				.transposh-flag {
+					width: 16px;
+					height: 12px;
+					display: inline-block;
+				}
+			}
+		}
+	}
+	
+	/* Styles pour le sélecteur vertical */
+	.transposh-vertical-widget {
+		.transposh-language-list {
+			list-style: none;
+			padding: 0;
+			margin: 0;
+			
+			li {
+				margin-bottom: 5px;
+				
+				&.tr_active {
+					font-weight: bold;
+					
+					.transposh-language-link {
+						font-weight: bold;
+					}
+				}
+				
+				.transposh-language-link {
+					display: flex;
+					align-items: center;
+					gap: 4px;
+					text-decoration: none;
+					color: inherit;
+					
+					.transposh-flag {
+						width: 16px;
+						height: 12px;
+						display: inline-block;
+					}
+				}
+			}
+		}
+	}
+	
+	/* Styles pour le sélecteur dropdown */
+	.transposh-dropdown-widget {
+		.transposh-language-select {
+			width: 100%;
+			padding: 6px 8px;
+			border: 1px solid #ccc;
+			border-radius: 4px;
+			background: white;
+			font-size: 14px;
+			
+			&:disabled {
+				opacity: 0.7;
+				cursor: not-allowed;
+			}
+		}
+	}
+	
+	/* Styles pour le toggle Edit Translation */
+	.transposh-edit-translation {
+		margin-top: 10px;
+		
+		.transposh-toggle-control {
+			display: flex;
+			align-items: center;
+			gap: 8px;
+			cursor: pointer;
+			user-select: none;
+			
+			.transposh-toggle-track {
+				position: relative;
+				display: inline-block;
+				width: 36px;
+				height: 18px;
+				background-color: #ddd;
+				border-radius: 9px;
+				transition: background-color 0.2s;
+				
+				.transposh-toggle-thumb {
+					position: absolute;
+					top: 2px;
+					left: 2px;
+					width: 14px;
+					height: 14px;
+					background-color: white;
+					border-radius: 50%;
+					transition: left 0.2s;
+					box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+				}
+				
+				&.active {
+					background-color: #007cba;
+					
+					.transposh-toggle-thumb {
+						left: 20px;
+					}
+				}
+			}
+			
+			.transposh-toggle-label {
+				font-size: 13px;
+				color: #555;
+			}
+		}
+	}
 }
