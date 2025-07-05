@@ -24,12 +24,89 @@ import {
 } from "@wordpress/components";
 
 /**
+ * WordPress data package for accessing global data
+ */
+import { useSelect } from "@wordpress/data";
+
+/**
  * Lets webpack process CSS, SASS or SCSS files referenced in JavaScript files.
  * Those files can contain any CSS code that gets applied to the editor.
  *
  * @see https://www.npmjs.com/package/@wordpress/scripts#using-css
  */
 import "./editor.scss";
+
+/**
+ * Configuration des langues réalistes basées sur les langues communes de Transposh
+ */
+const TRANSPOSH_LANGUAGES = {
+	fr: {
+		code: 'fr',
+		name: 'Français',
+		flag: 'https://flagcdn.com/w20/fr.png',
+		emoji: '🇫🇷'
+	},
+	en: {
+		code: 'en',
+		name: 'English',
+		flag: 'https://flagcdn.com/w20/us.png',
+		emoji: '🇺🇸'
+	},
+	es: {
+		code: 'es',
+		name: 'Español',
+		flag: 'https://flagcdn.com/w20/es.png',
+		emoji: '🇪🇸'
+	},
+	de: {
+		code: 'de',
+		name: 'Deutsch',
+		flag: 'https://flagcdn.com/w20/de.png',
+		emoji: '🇩🇪'
+	},
+	it: {
+		code: 'it',
+		name: 'Italiano',
+		flag: 'https://flagcdn.com/w20/it.png',
+		emoji: '🇮🇹'
+	},
+	pt: {
+		code: 'pt',
+		name: 'Português',
+		flag: 'https://flagcdn.com/w20/pt.png',
+		emoji: '🇵🇹'
+	},
+	nl: {
+		code: 'nl',
+		name: 'Nederlands',
+		flag: 'https://flagcdn.com/w20/nl.png',
+		emoji: '🇳🇱'
+	},
+	ru: {
+		code: 'ru',
+		name: 'Русский',
+		flag: 'https://flagcdn.com/w20/ru.png',
+		emoji: '🇷🇺'
+	},
+	zh: {
+		code: 'zh',
+		name: '中文',
+		flag: 'https://flagcdn.com/w20/cn.png',
+		emoji: '🇨🇳'
+	},
+	ja: {
+		code: 'ja',
+		name: '日本語',
+		flag: 'https://flagcdn.com/w20/jp.png',
+		emoji: '🇯🇵'
+	},
+	ar: {
+		code: 'ar',
+		name: 'العربية',
+		flag: 'https://flagcdn.com/w20/sa.png',
+		emoji: '🇸🇦'
+	}
+};
 
 /**
  * The edit function describes the structure of your block in the context of the
@@ -51,6 +128,85 @@ export default function Edit({ attributes, setAttributes }) {
 	} = attributes;
 
 	const blockProps = useBlockProps();
+
+	// Récupération des langues configurées sur le site (simulation réaliste)
+	const siteLanguages = useSelect((select) => {
+		// Tenter de récupérer les langues configurées
+		const siteData = select('core').getSite();
+		const currentLang = siteData?.language || 'fr';
+		
+		// Simulation des langues configurées typiques pour un site français
+		const configuredLanguages = [
+			currentLang.substring(0, 2), // Langue principale
+			'en', // Anglais (très commun)
+			'es', // Espagnol
+			'de', // Allemand
+			'it'  // Italien
+		];
+		
+		// Suppression des doublons et limitation à 5 langues max
+		const uniqueLanguages = [...new Set(configuredLanguages)].slice(0, 5);
+		
+		return uniqueLanguages.map(langCode => 
+			TRANSPOSH_LANGUAGES[langCode] || TRANSPOSH_LANGUAGES.fr
+		);
+	}, []);
+
+	// Langue actuelle (première de la liste)
+	const currentLanguage = siteLanguages[0] || TRANSPOSH_LANGUAGES.fr;
+
+	// Fonction pour obtenir les classes CSS selon le style
+	const getWidgetClasses = () => {
+		switch (style) {
+			case "dropdown":
+				return "transposh-dropdown-widget";
+			case "vertical":
+				return "transposh-vertical-widget";
+			case "horizontal":
+			default:
+				return "transposh-horizontal-widget";
+		}
+	};
+
+	// Fonction pour rendre un lien de langue
+	const renderLanguageLink = (language, isActive = false, isSpan = false) => {
+		const Element = isSpan ? 'span' : 'a';
+		const className = `transposh-language-link ${isActive ? 'tr_active' : ''}`;
+		
+		return (
+			<Element 
+				key={language.code}
+				href={!isSpan ? "#" : undefined}
+				className={className}
+				onClick={!isSpan ? (e) => e.preventDefault() : undefined}
+			>
+				{showFlags && (
+					<img
+						src={language.flag}
+						alt={language.name}
+						className="transposh-flag"
+						onError={(e) => {
+							// Fallback vers l'emoji si l'image ne charge pas
+							e.target.style.display = 'none';
+							e.target.nextSibling.style.display = 'inline';
+						}}
+					/>
+				)}
+				{showFlags && (
+					<span 
+						className="transposh-flag-fallback"
+						style={{ display: 'none' }}
+					>
+						{language.emoji}
+					</span>
+				)}
+				{showNames && (
+					<span className="transposh-lang-name">{language.name}</span>
+				)}
+				{!showFlags && !showNames && language.code.toUpperCase()}
+			</Element>
+		);
+	};
 
 	return (
 		<>
@@ -119,7 +275,7 @@ export default function Edit({ attributes, setAttributes }) {
 						checked={showEditTranslation}
 						onChange={(value) => setAttributes({ showEditTranslation: value })}
 						help={__(
-							"Affiche la checkbox pour basculer en mode édition de traduction",
+							"Affiche le toggle pour basculer en mode édition de traduction",
 							"transposh",
 						)}
 					/>
@@ -127,98 +283,49 @@ export default function Edit({ attributes, setAttributes }) {
 			</InspectorControls>
 
 			<div {...blockProps}>
-				{/* Titre du widget */}
-				{title && (
-					<h3 className="widget-title" style={{ marginBottom: "10px" }}>
-						{title}
-					</h3>
-				)}
+				<div className={getWidgetClasses()}>
+					{/* Titre du widget */}
+					{title && <div className="widgettitle">{title}</div>}
 
-				{/* Aperçu du sélecteur de langue */}
-				<div style={{ marginBottom: showEditTranslation ? "10px" : "0" }}>
+					{/* Sélecteur de langue selon le style */}
 					{style === "dropdown" && (
-						<div className="transposh-dropdown-widget">
-							<select
-								className="transposh-language-select"
-								style={{
-									padding: "5px",
-									border: "1px solid #ccc",
-									borderRadius: "4px",
-									cursor: "not-allowed",
-								}}
-								disabled
-							>
-								<option>Choisir une langue</option>
-								<option>
-									{showFlags && "🇫🇷 "}
-									{showNames && "Français"}
-									{!showFlags && !showNames && "FR"}
-								</option>
-								<option>
-									{showFlags && "🇬🇧 "}
-									{showNames && "English"}
-									{!showFlags && !showNames && "EN"}
-								</option>
-								<option>
-									{showFlags && "🇪🇸 "}
-									{showNames && "Español"}
-									{!showFlags && !showNames && "ES"}
-								</option>
+						<form className="transposh-language-form">
+							<select className="transposh-language-select" disabled>
+								<option>{__("Choisir une langue", "transposh")}</option>
+								{siteLanguages.map((language) => (
+									<option key={language.code} value={language.code}>
+										{showFlags && `${language.emoji} `}
+										{showNames && language.name}
+										{!showFlags && !showNames && language.code.toUpperCase()}
+									</option>
+								))}
 							</select>
-						</div>
+						</form>
 					)}
 
 					{style === "horizontal" && (
-						<div className="transposh-horizontal-widget">
-							<div
-								className="transposh-language-list horizontal"
-								style={{
-									display: "flex",
-									gap: "10px",
-									flexWrap: "wrap",
-								}}
-							>
-								<a
-									href="#"
-									className="transposh-language-link tr_active"
-									style={{
-										display: "inline-flex",
-										alignItems: "center",
-										gap: "5px",
-										textDecoration: "none",
-										pointerEvents: "none",
-									}}
-								>
+						<div className="transposh-language-switcher">
+							<div className="transposh-language-list">
+								<span className="transposh-language-link tr_active">
 									{showFlags && (
 										<img
 											src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTYiIGhlaWdodD0iMTIiIHZpZXdCb3g9IjAgMCAxNiAxMiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjE2IiBoZWlnaHQ9IjEyIiBmaWxsPSIjRkZGIi8+CjxyZWN0IHdpZHRoPSIxNiIgaGVpZ2h0PSI0IiBmaWxsPSIjMDAyMzk1Ii8+CjxyZWN0IHk9IjgiIHdpZHRoPSIxNiIgaGVpZ2h0PSI0IiBmaWxsPSIjRUQyOTM5Ii8+Cjwvc3ZnPg=="
 											alt="Français"
 											className="transposh-flag"
-											style={{ width: "16px", height: "12px" }}
 										/>
 									)}
 									{showNames && (
 										<span className="transposh-lang-name">Français</span>
 									)}
 									{!showFlags && !showNames && "FR"}
-								</a>
-								<a
-									href="#"
-									className="transposh-language-link"
-									style={{
-										display: "inline-flex",
-										alignItems: "center",
-										gap: "5px",
-										textDecoration: "none",
-										pointerEvents: "none",
-									}}
-								>
+								</span>
+								{" | "}
+								<a href="#" className="transposh-language-link">
 									{showFlags && (
 										<img
 											src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTYiIGhlaWdodD0iMTIiIHZpZXdCb3g9IjAgMCAxNiAxMiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjE2IiBoZWlnaHQ9IjEyIiBmaWxsPSIjMDEyMTY5Ii8+CjxyZWN0IHdpZHRoPSIxNiIgaGVpZ2h0PSI0IiBmaWxsPSIjRkZGIi8+CjxyZWN0IHk9IjgiIHdpZHRoPSIxNiIgaGVpZ2h0PSI0IiBmaWxsPSIjRkZGIi8+Cjwvc3ZnPg=="
 											alt="English"
 											className="transposh-flag"
-											style={{ width: "16px", height: "12px" }}
 										/>
 									)}
 									{showNames && (
@@ -226,23 +333,13 @@ export default function Edit({ attributes, setAttributes }) {
 									)}
 									{!showFlags && !showNames && "EN"}
 								</a>
-								<a
-									href="#"
-									className="transposh-language-link"
-									style={{
-										display: "inline-flex",
-										alignItems: "center",
-										gap: "5px",
-										textDecoration: "none",
-										pointerEvents: "none",
-									}}
-								>
+								{" | "}
+								<a href="#" className="transposh-language-link">
 									{showFlags && (
 										<img
 											src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTYiIGhlaWdodD0iMTIiIHZpZXdCb3g9IjAgMCAxNiAxMiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjE2IiBoZWlnaHQ9IjEyIiBmaWxsPSIjRkZGIi8+CjxyZWN0IHdpZHRoPSIxNiIgaGVpZ2h0PSI0IiBmaWxsPSIjQUEyMjJBIi8+CjxyZWN0IHk9IjgiIHdpZHRoPSIxNiIgaGVpZ2h0PSI0IiBmaWxsPSIjRkZDNDAwIi8+Cjwvc3ZnPg=="
 											alt="Español"
 											className="transposh-flag"
-											style={{ width: "16px", height: "12px" }}
 										/>
 									)}
 									{showNames && (
@@ -255,62 +352,30 @@ export default function Edit({ attributes, setAttributes }) {
 					)}
 
 					{style === "vertical" && (
-						<div className="transposh-vertical-widget">
-							<ul
-								className="transposh-language-list vertical"
-								style={{
-									display: "flex",
-									flexDirection: "column",
-									gap: "5px",
-									listStyle: "none",
-									padding: "0",
-									margin: "0",
-								}}
-							>
+						<div className="transposh-language-switcher">
+							<ul className="transposh-language-list">
 								<li className="tr_active">
-									<a
-										href="#"
-										className="transposh-language-link"
-										style={{
-											display: "flex",
-											alignItems: "center",
-											gap: "5px",
-											textDecoration: "none",
-											pointerEvents: "none",
-										}}
-									>
+									<span className="transposh-language-link">
 										{showFlags && (
 											<img
 												src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTYiIGhlaWdodD0iMTIiIHZpZXdCb3g9IjAgMCAxNiAxMiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjE2IiBoZWlnaHQ9IjEyIiBmaWxsPSIjRkZGIi8+CjxyZWN0IHdpZHRoPSIxNiIgaGVpZ2h0PSI0IiBmaWxsPSIjMDAyMzk1Ii8+CjxyZWN0IHk9IjgiIHdpZHRoPSIxNiIgaGVpZ2h0PSI0IiBmaWxsPSIjRUQyOTM5Ii8+Cjwvc3ZnPg=="
 												alt="Français"
 												className="transposh-flag"
-												style={{ width: "16px", height: "12px" }}
 											/>
 										)}
 										{showNames && (
 											<span className="transposh-lang-name">Français</span>
 										)}
 										{!showFlags && !showNames && "FR"}
-									</a>
+									</span>
 								</li>
 								<li>
-									<a
-										href="#"
-										className="transposh-language-link"
-										style={{
-											display: "flex",
-											alignItems: "center",
-											gap: "5px",
-											textDecoration: "none",
-											pointerEvents: "none",
-										}}
-									>
+									<a href="#" className="transposh-language-link">
 										{showFlags && (
 											<img
 												src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTYiIGhlaWdodD0iMTIiIHZpZXdCb3g9IjAgMCAxNiAxMiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjE2IiBoZWlnaHQ9IjEyIiBmaWxsPSIjMDEyMTY5Ii8+CjxyZWN0IHdpZHRoPSIxNiIgaGVpZ2h0PSI0IiBmaWxsPSIjRkZGIi8+CjxyZWN0IHk9IjgiIHdpZHRoPSIxNiIgaGVpZ2h0PSI0IiBmaWxsPSIjRkZGIi8+Cjwvc3ZnPg=="
 												alt="English"
 												className="transposh-flag"
-												style={{ width: "16px", height: "12px" }}
 											/>
 										)}
 										{showNames && (
@@ -320,23 +385,12 @@ export default function Edit({ attributes, setAttributes }) {
 									</a>
 								</li>
 								<li>
-									<a
-										href="#"
-										className="transposh-language-link"
-										style={{
-											display: "flex",
-											alignItems: "center",
-											gap: "5px",
-											textDecoration: "none",
-											pointerEvents: "none",
-										}}
-									>
+									<a href="#" className="transposh-language-link">
 										{showFlags && (
 											<img
 												src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTYiIGhlaWdodD0iMTIiIHZpZXdCb3g9IjAgMCAxNiAxMiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjE2IiBoZWlnaHQ9IjEyIiBmaWxsPSIjRkZGIi8+CjxyZWN0IHdpZHRoPSIxNiIgaGVpZ2h0PSI0IiBmaWxsPSIjQUEyMjJBIi8+CjxyZWN0IHk9IjgiIHdpZHRoPSIxNiIgaGVpZ2h0PSI0IiBmaWxsPSIjRkZDNDAwIi8+Cjwvc3ZnPg=="
 												alt="Español"
 												className="transposh-flag"
-												style={{ width: "16px", height: "12px" }}
 											/>
 										)}
 										{showNames && (
@@ -348,56 +402,22 @@ export default function Edit({ attributes, setAttributes }) {
 							</ul>
 						</div>
 					)}
-				</div>
 
-				{/* Toggle Edit Translation */}
-				{showEditTranslation && (
-					<div className="transposh-edit-translation">
-						<label
-							className="transposh-toggle-control"
-							style={{
-								display: "flex",
-								alignItems: "center",
-								gap: "8px",
-								cursor: "not-allowed",
-								userSelect: "none",
-							}}
-						>
-							<span
-								className="transposh-toggle-track"
-								style={{
-									position: "relative",
-									display: "inline-block",
-									width: "36px",
-									height: "18px",
-									backgroundColor: "#ddd",
-									borderRadius: "9px",
-									transition: "background-color 0.2s",
-								}}
-							>
-								<span
-									className="transposh-toggle-thumb"
-									style={{
-										position: "absolute",
-										top: "2px",
-										left: "2px",
-										width: "14px",
-										height: "14px",
-										backgroundColor: "white",
-										borderRadius: "50%",
-										transition: "left 0.2s",
-										boxShadow: "0 1px 3px rgba(0,0,0,0.3)",
-									}}
-								></span>
-							</span>
-							<span
-								className="transposh-toggle-label"
-								style={{ fontSize: "13px", color: "#555" }}
-							>
-								{__("Edit Translation", "transposh")}
-							</span>
-						</label>
-					</div>
+					{/* Toggle Edit Translation */}
+					{showEditTranslation && (
+						<div className="transposh-edit-translation">
+							<label className="transposh-toggle-control">
+								<span className="transposh-toggle-track">
+									<span className="transposh-toggle-thumb"></span>
+								</span>
+								<span className="transposh-toggle-label">
+									{__("Edit Translation", "transposh")}
+								</span>
+							</label>
+						</div>
+					)}
+				</div>
+			</div>
 		</>
 	);
 }
