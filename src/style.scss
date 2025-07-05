@@ -115,4 +115,72 @@
 		font-size: 14px;
 		color: inherit;
 	}
+	
+	// Styles spécifiques pour les différentes librairies de drapeaux
+	.transposh-flag {
+		display: inline-block;
+		vertical-align: middle;
+		
+		// Styles par défaut pour toutes les librairies
+		&.transposh-flag-tiny {
+			width: 16px;
+			height: 12px;
+		}
+		
+		&.transposh-flag-small {
+			width: 20px;
+			height: 15px;
+		}
+		
+		&.transposh-flag-medium {
+			width: 32px;
+			height: 24px;
+		}
+		
+		&.transposh-flag-large {
+			width: 48px;
+			height: 36px;
+		}
+		
+		// Styles spécifiques pour Circle Flags
+		&.transposh-flag-circle-flags {
+			border-radius: 50%;
+			border: 1px solid #ddd;
+		}
+		
+		// Styles spécifiques pour Rounded Flags
+		&.transposh-flag-rounded-flags {
+			border-radius: 6px;
+			border: 1px solid #ddd;
+		}
+		
+		// Styles spécifiques pour FlagCDN
+		&.transposh-flag-flagcdn {
+			border-radius: 2px;
+			border: 1px solid #ddd;
+		}
+		
+		// Styles spécifiques pour FlagIcons
+		&.transposh-flag-flagicons {
+			border-radius: 2px;
+			border: 1px solid #ddd;
+		}
+		
+		// Styles spécifiques pour Twemoji
+		&.transposh-flag-twemoji {
+			border: none;
+			border-radius: 2px;
+		}
+		
+		// Styles spécifiques pour Emoji
+		&.transposh-flag-emoji {
+			border: none;
+			font-family: "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", sans-serif;
+			line-height: 1;
+			text-align: center;
+			display: inline-flex;
+			align-items: center;
+			justify-content: center;
+		}
+	}
 }

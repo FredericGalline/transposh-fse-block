@@ -47,6 +47,83 @@ $flag_library = isset($attributes['flagLibrary']) ? $attributes['flagLibrary'] :
 $flag_size = isset($attributes['flagSize']) ? $attributes['flagSize'] : 'small';
 
 /**
+ * Fonction pour obtenir les dimensions des drapeaux selon la taille
+ */
+if (!function_exists('get_transposh_flag_dimensions')) {
+    function get_transposh_flag_dimensions($flag_size)
+    {
+        $sizes = get_transposh_flag_sizes();
+        if (isset($sizes[$flag_size])) {
+            return $sizes[$flag_size];
+        }
+        
+        // Fallback vers small si la taille n'est pas définie
+        return $sizes['small'] ?? ['width' => '20px', 'height' => '15px'];
+    }
+}
+
+/**
+ * Fonction pour convertir un code de langue en code pays
+ */
+if (!function_exists('get_country_code_from_lang')) {
+    function get_country_code_from_lang($lang_code)
+    {
+        // Mapping des codes de langues vers codes pays
+        $lang_to_country = [
+            'fr' => 'fr',
+            'en' => 'gb',
+            'us' => 'us',
+            'es' => 'es',
+            'it' => 'it',
+            'de' => 'de',
+            'pt' => 'pt',
+            'nl' => 'nl',
+            'ru' => 'ru',
+            'zh' => 'cn',
+            'ja' => 'jp',
+            'ko' => 'kr',
+            'ar' => 'sa',
+            'pl' => 'pl',
+            'tr' => 'tr',
+            'sv' => 'se',
+            'no' => 'no',
+            'da' => 'dk',
+            'fi' => 'fi',
+            'el' => 'gr',
+            'he' => 'il',
+            'hi' => 'in',
+            'th' => 'th',
+            'vi' => 'vn',
+            'id' => 'id',
+            'ms' => 'my',
+            'tl' => 'ph',
+            'uk' => 'ua',
+            'cs' => 'cz',
+            'sk' => 'sk',
+            'hu' => 'hu',
+            'ro' => 'ro',
+            'bg' => 'bg',
+            'hr' => 'hr',
+            'sr' => 'rs',
+            'sl' => 'si',
+            'et' => 'ee',
+            'lv' => 'lv',
+            'lt' => 'lt',
+            'is' => 'is',
+            'mt' => 'mt',
+            'cy' => 'cy',
+            'ie' => 'ie',
+            'be' => 'be',
+            'lu' => 'lu',
+            'ch' => 'ch',
+            'at' => 'at',
+        ];
+        
+        return $lang_to_country[$lang_code] ?? $lang_code;
+    }
+}
+
+/**
  * Fonction pour rendre un drapeau selon la librairie choisie
  */
 if (!function_exists('render_flag')) {

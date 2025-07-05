@@ -54,28 +54,22 @@ function get_transposh_flag_libraries()
         ],
         'rounded-flags' => [
             'name' => 'Rounded Flags',
-            'base_url' => 'https://www.countries-ofthe-world.com/flags',
-            'format' => 'png',
+            'base_url' => 'https://flagicons.lipis.dev/flags',
+            'format' => 'svg',
             'get_url' => function ($lang_code, $size) {
-                $size_map = [
-                    'tiny' => 'small',
-                    'small' => 'small',
-                    'medium' => 'normal',
-                    'large' => 'large'
-                ];
-                $size_param = $size_map[$size] ?? 'small';
-                return "https://www.countries-ofthe-world.com/flags-{$size_param}/{$lang_code}.png";
+                // Utiliser FlagIcons avec style arrondi via CSS
+                return "https://flagicons.lipis.dev/flags/4x3/{$lang_code}.svg";
             }
         ],
         'twemoji' => [
             'name' => 'Twemoji',
-            'base_url' => 'https://twemoji.maxcdn.com/v/latest/svg',
+            'base_url' => 'https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg',
             'format' => 'svg',
             'get_url' => function ($lang_code, $size) {
                 $unicode_map = get_country_unicode_map();
                 $unicode = $unicode_map[$lang_code] ?? '';
                 if (!$unicode) return '';
-                return "https://twemoji.maxcdn.com/v/latest/svg/{$unicode}.svg";
+                return "https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/{$unicode}.svg";
             }
         ],
         'emoji' => [
