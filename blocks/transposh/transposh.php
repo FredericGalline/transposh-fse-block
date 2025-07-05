@@ -19,5 +19,9 @@ if (! defined('ABSPATH')) {
 }
 
 add_action('init', function () {
+	// Charger les traductions
+	load_textdomain('transposh', __DIR__ . '/languages/transposh-' . get_locale() . '.mo');
+
+	// Enregistrer le bloc
 	register_block_type(__DIR__ . '/build');
 });

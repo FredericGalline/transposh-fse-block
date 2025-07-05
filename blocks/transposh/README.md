@@ -1,70 +1,149 @@
-# Transposh FSE Language Switcher
+# Transposh FSE Language Switcher Block
 
-Un bloc Gutenberg dynamique pour afficher le widget de sélection de langue Transposh, compatible FSE (Full Site Editing).
+A dynamic Gutenberg block to display the native Transposh language selection widget, fully compatible with Full Site Editing (FSE).
 
 ## Description
 
-Ce bloc permet d'intégrer facilement le sélecteur de langues Transposh dans l'éditeur Gutenberg et l'éditeur de site WordPress. Il offre toutes les fonctionnalités du widget natif Transposh avec une interface moderne et configurable.
+This block allows easy integration of the Transposh language selector into the Gutenberg editor and WordPress Site Editor. It provides all the functionality of the native Transposh widget with a modern, configurable interface that seamlessly integrates with WordPress's block-based editing experience.
 
-## Fonctionnalités
+## Features
 
-- **3 styles d'affichage** : Horizontal, Vertical, Menu déroulant
-- **Personnalisation complète** : Drapeaux, noms de langues, titre personnalisé
-- **Mode édition** : Checkbox "Edit Translation" pour la traduction manuelle
-- **Options avancées** : Masquage de la langue actuelle, attribut nofollow
-- **Compatible FSE** : Utilisable dans l'éditeur de site WordPress
-- **WYSIWYG** : Affichage identique dans l'éditeur et sur le site
-- **Robuste** : Gestion d'erreurs et vérifications de sécurité
+- **3 display styles**: Horizontal, Vertical, Dropdown menu
+- **Complete customization**: Flags, language names, custom title
+- **Edit mode**: "Edit Translation" checkbox for manual translation
+- **Advanced options**: Hide current language, nofollow attribute
+- **FSE compatible**: Works in WordPress Site Editor
+- **WYSIWYG**: Non-clickable preview in editor, fully functional on frontend
+- **Robust**: Error handling and security checks
+- **Multilingual interface**: Supports multiple languages with Poedit compatibility
 
 ## Installation
 
-1. Assurez-vous que le plugin **Transposh** est installé et activé
-2. Copiez le dossier `transposh` dans `/wp-content/themes/votre-theme/blocks/`
-3. Ajoutez l'inclusion du bloc dans votre `functions.php` :
+### Option 1: Theme Integration (Recommended)
+1. Ensure the **Transposh** plugin is installed and activated
+2. Copy the `transposh` folder to `/wp-content/themes/your-theme/blocks/`
+3. Add the block inclusion to your theme's `functions.php`:
 
 ```php
-// Inclure le bloc Transposh FSE
+// Include Transposh FSE Block
 if (file_exists(get_template_directory() . '/blocks/transposh/transposh.php')) {
     require_once get_template_directory() . '/blocks/transposh/transposh.php';
 }
 ```
 
-## Utilisation
+### Option 2: Plugin Integration
+This block can be integrated directly into the Transposh plugin by:
+1. Adding the block files to the plugin's directory structure
+2. Registering the block in the plugin's main file
+3. Enqueueing the block assets with the plugin's other scripts
 
-### Dans l'éditeur Gutenberg :
-1. Recherchez "Transposh Switcher" dans la bibliothèque de blocs
-2. Insérez le bloc dans votre contenu
-3. Configurez les paramètres dans la sidebar de droite
+## Usage
 
-### Dans l'éditeur de site (FSE) :
-1. Ouvrez l'éditeur de site WordPress
-2. Ajoutez le bloc "Transposh Switcher" dans vos templates
-3. Personnalisez selon vos besoins
+### In Gutenberg Editor:
+1. Search for "Transposh Switcher" in the block library
+2. Insert the block into your content
+3. Configure settings in the right sidebar
 
-## Paramètres disponibles
+### In Site Editor (FSE):
+1. Open WordPress Site Editor
+2. Add the "Transposh Switcher" block to your templates
+3. Customize according to your needs
 
-| Paramètre | Type | Défaut | Description |
-|-----------|------|--------|-------------|
-| **Titre du widget** | Texte | Vide | Titre affiché au-dessus du sélecteur |
-| **Style d'affichage** | Sélection | Horizontal | Horizontal, Vertical ou Menu déroulant |
-| **Afficher les drapeaux** | Toggle | Oui | Affiche les drapeaux des pays |
-| **Afficher les noms de langues** | Toggle | Oui | Affiche les noms des langues |
-| **Masquer la langue actuelle** | Toggle | Non | Cache la langue actuellement sélectionnée |
-| **Ajouter rel='nofollow'** | Toggle | Oui | Ajoute l'attribut nofollow aux liens |
-| **Afficher 'Edit Translation'** | Toggle | Oui | Affiche la checkbox de mode édition |
+### Block Settings
 
-## Prérequis
+| Setting | Type | Default | Description |
+|---------|------|---------|-------------|
+| **Widget Title** | Text | Empty | Title displayed above the language selector |
+| **Display Style** | Select | Horizontal | Horizontal, Vertical, or Dropdown menu |
+| **Show Flags** | Toggle | Yes | Display country flags |
+| **Show Language Names** | Toggle | Yes | Display language names as text |
+| **Hide Current Language** | Toggle | No | Hide the currently selected language |
+| **Add rel='nofollow'** | Toggle | Yes | Add nofollow attribute to language links |
+| **Show 'Edit Translation'** | Toggle | Yes | Display edit mode checkbox |
+
+## Requirements
 
 - WordPress 6.6+
 - PHP 7.2+
-- Plugin Transposh installé et configuré
+- Transposh plugin installed and configured
 
-## Support et développement
+## Supported Languages
 
-Développé par Frédéric Galliné  
-Version: 1.0.0  
-Licence: GPL-2.0-or-later
+The block includes translations for:
+- **English** (en_US) - Default
+- **French** (fr_FR) - Français
+- **Spanish** (es_ES) - Español
+
+### Adding New Languages
+
+To add a new language translation:
+
+1. Copy the `languages/transposh.pot` template file
+2. Create a new `.po` file: `transposh-[locale].po` (e.g., `transposh-de_DE.po`)
+3. Translate the strings using **Poedit** or any `.po` editor
+4. Compile the `.mo` file
+5. Place both files in the `languages/` directory
+
+The translation domain used is `transposh`, ensuring compatibility with the original Transposh plugin.
+
+## Technical Details
+
+### Block Structure
+```
+blocks/transposh/
+├── build/                 # Compiled files
+├── src/                   # Source files
+│   ├── edit.js           # Block editor interface
+│   ├── block.json        # Block configuration
+│   └── *.scss           # Styles
+├── languages/            # Translation files
+├── render.php           # Server-side rendering
+├── transposh.php        # Block registration
+└── package.json         # Build configuration
+```
+
+### Rendering
+The block uses server-side rendering (`render.php`) to ensure compatibility with all Transposh features and settings. The editor preview is a non-clickable representation that updates in real-time as settings change.
+
+### Security
+- Input sanitization for all attributes
+- Permission checks for edit translation feature
+- Graceful fallback when Transposh plugin is not available
+
+## Integration with Transposh Plugin
+
+This block is designed to work seamlessly with the existing Transposh plugin:
+- Uses the same translation domain (`transposh`)
+- Respects all Transposh settings and configurations
+- Maintains compatibility with existing Transposh features
+- Follows WordPress coding standards and best practices
+
+## Development
+
+### Building the Block
+```bash
+npm install
+npm run build
+```
+
+### Development Mode
+```bash
+npm run start
+```
+
+## Contribution
+
+This block was developed to enhance the Transposh plugin's integration with modern WordPress block editing. It could be integrated into a future version of Transposh to provide users with a native block-based language switching experience.
+
+## License
+
+GPL-2.0-or-later - Same as WordPress and Transposh plugin
+
+## Author
+
+Developed by Frédéric Galliné  
+Version: 1.0.0
 
 ---
 
-*Ce bloc respecte toutes les bonnes pratiques WordPress et s'intègre parfaitement avec le système FSE.*
+*This block follows all WordPress best practices and integrates perfectly with the FSE system, making it an ideal addition to the Transposh plugin ecosystem.*

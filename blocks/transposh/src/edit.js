@@ -24,11 +24,6 @@ import {
 } from "@wordpress/components";
 
 /**
- * ServerSideRender for WYSIWYG display
- */
-import ServerSideRender from "@wordpress/server-side-render";
-
-/**
  * Lets webpack process CSS, SASS or SCSS files referenced in JavaScript files.
  * Those files can contain any CSS code that gets applied to the editor.
  *
@@ -132,48 +127,208 @@ export default function Edit({ attributes, setAttributes }) {
 			</InspectorControls>
 
 			<div {...blockProps}>
-				<ServerSideRender
-					block="transposh/fse-language-switcher"
-					attributes={attributes}
-					EmptyResponsePlaceholder={() => (
+				<div
+					style={{
+						padding: "10px",
+						border: "1px solid #ddd",
+						borderRadius: "4px",
+						backgroundColor: "#fff",
+					}}
+				>
+					{/* Titre du widget */}
+					{title && (
 						<div
 							style={{
-								border: "2px dashed #ccc",
-								padding: "20px",
-								textAlign: "center",
-								backgroundColor: "#f9f9f9",
-								borderRadius: "4px",
+								marginBottom: "10px",
+								fontWeight: "bold",
+								fontSize: "14px",
 							}}
 						>
-							<div style={{ fontSize: "24px", marginBottom: "10px" }}>🌐</div>
-							<div style={{ fontWeight: "bold", marginBottom: "8px" }}>
-								{title || __("Widget Transposh", "transposh")}
-							</div>
-							<div style={{ fontSize: "12px", color: "#666" }}>
-								{__("Plugin Transposh requis pour l'affichage", "transposh")}
-							</div>
+							{title}
 						</div>
 					)}
-					LoadingResponsePlaceholder={() => (
-						<div
-							style={{
-								border: "2px dashed #ccc",
-								padding: "20px",
-								textAlign: "center",
-								backgroundColor: "#f9f9f9",
-								borderRadius: "4px",
-							}}
-						>
-							<div style={{ fontSize: "24px", marginBottom: "10px" }}>🌐</div>
-							<div style={{ fontWeight: "bold", marginBottom: "8px" }}>
-								{title || __("Widget Transposh", "transposh")}
+
+					{/* Aperçu du sélecteur de langue */}
+					<div style={{ marginBottom: "10px" }}>
+						{style === "dropdown" && (
+							<select
+								style={{
+									padding: "5px 10px",
+									borderRadius: "4px",
+									border: "1px solid #ccc",
+									backgroundColor: "#fff",
+									cursor: "not-allowed",
+								}}
+								disabled
+							>
+								<option>
+									{showFlags && "🇫🇷 "}
+									{showNames && "Français"}
+									{!showFlags && !showNames && "FR"}
+								</option>
+								<option>
+									{showFlags && "🇬🇧 "}
+									{showNames && "English"}
+									{!showFlags && !showNames && "EN"}
+								</option>
+								<option>
+									{showFlags && "🇪🇸 "}
+									{showNames && "Español"}
+									{!showFlags && !showNames && "ES"}
+								</option>
+							</select>
+						)}
+
+						{style === "horizontal" && (
+							<div
+								style={{
+									display: "flex",
+									gap: "10px",
+									justifyContent: "flex-start",
+									alignItems: "center",
+								}}
+							>
+								<span
+									style={{
+										padding: "5px 8px",
+										backgroundColor: "#f0f0f0",
+										borderRadius: "3px",
+										cursor: "not-allowed",
+										fontSize: "14px",
+									}}
+								>
+									{showFlags && "🇫🇷"}
+									{showFlags && showNames && " "}
+									{showNames && "Français"}
+									{!showFlags && !showNames && "FR"}
+								</span>
+								<span style={{ color: "#ccc" }}>|</span>
+								<span
+									style={{
+										padding: "5px 8px",
+										backgroundColor: "#f9f9f9",
+										borderRadius: "3px",
+										cursor: "not-allowed",
+										fontSize: "14px",
+									}}
+								>
+									{showFlags && "🇬�"}
+									{showFlags && showNames && " "}
+									{showNames && "English"}
+									{!showFlags && !showNames && "EN"}
+								</span>
+								<span style={{ color: "#ccc" }}>|</span>
+								<span
+									style={{
+										padding: "5px 8px",
+										backgroundColor: "#f9f9f9",
+										borderRadius: "3px",
+										cursor: "not-allowed",
+										fontSize: "14px",
+									}}
+								>
+									{showFlags && "🇪🇸"}
+									{showFlags && showNames && " "}
+									{showNames && "Español"}
+									{!showFlags && !showNames && "ES"}
+								</span>
 							</div>
-							<div style={{ fontSize: "12px", color: "#666" }}>
-								{__("Chargement...", "transposh")}
+						)}
+
+						{style === "vertical" && (
+							<div
+								style={{
+									display: "flex",
+									flexDirection: "column",
+									gap: "5px",
+									alignItems: "flex-start",
+								}}
+							>
+								<span
+									style={{
+										padding: "5px 8px",
+										backgroundColor: "#f0f0f0",
+										borderRadius: "3px",
+										cursor: "not-allowed",
+										fontSize: "14px",
+									}}
+								>
+									{showFlags && "🇫🇷"}
+									{showFlags && showNames && " "}
+									{showNames && "Français"}
+									{!showFlags && !showNames && "FR"}
+								</span>
+								<span
+									style={{
+										padding: "5px 8px",
+										backgroundColor: "#f9f9f9",
+										borderRadius: "3px",
+										cursor: "not-allowed",
+										fontSize: "14px",
+									}}
+								>
+									{showFlags && "🇬🇧"}
+									{showFlags && showNames && " "}
+									{showNames && "English"}
+									{!showFlags && !showNames && "EN"}
+								</span>
+								<span
+									style={{
+										padding: "5px 8px",
+										backgroundColor: "#f9f9f9",
+										borderRadius: "3px",
+										cursor: "not-allowed",
+										fontSize: "14px",
+									}}
+								>
+									{showFlags && "🇪🇸"}
+									{showFlags && showNames && " "}
+									{showNames && "Español"}
+									{!showFlags && !showNames && "ES"}
+								</span>
 							</div>
+						)}
+					</div>
+
+					{/* Checkbox Edit Translation */}
+					{showEditTranslation && (
+						<div style={{ marginTop: "10px", fontSize: "12px", color: "#666" }}>
+							<label
+								style={{
+									display: "flex",
+									alignItems: "center",
+									gap: "5px",
+									cursor: "not-allowed",
+								}}
+							>
+								<input
+									type="checkbox"
+									disabled
+									style={{ cursor: "not-allowed" }}
+								/>
+								{__("Edit Translation", "transposh")}
+							</label>
 						</div>
 					)}
-				/>
+
+					{/* Indication d'aperçu */}
+					<div
+						style={{
+							marginTop: "15px",
+							fontSize: "11px",
+							color: "#999",
+							fontStyle: "italic",
+							textAlign: "center",
+							borderTop: "1px solid #eee",
+							paddingTop: "10px",
+						}}
+					>
+						{__(
+							"Aperçu non-cliquable - Le rendu réel sera fonctionnel sur le site",
+							"transposh",
+						)}
+					</div>
+				</div>
 			</div>
 		</>
 	);
