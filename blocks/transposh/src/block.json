@@ -33,6 +33,10 @@
 		"title": {
 			"type": "string",
 			"default": ""
+		},
+		"showEditTranslation": {
+			"type": "boolean",
+			"default": true
 		}
 	},
 	"supports": {

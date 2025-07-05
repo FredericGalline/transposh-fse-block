@@ -39,12 +39,13 @@ $hide_current = isset($attributes['hideCurrentLanguage']) ? $attributes['hideCur
 $style = isset($attributes['style']) ? $attributes['style'] : 'horizontal';
 $nofollow = isset($attributes['nofollow']) ? $attributes['nofollow'] : true;
 $title = isset($attributes['title']) ? $attributes['title'] : '';
+$show_edit_translation = isset($attributes['showEditTranslation']) ? $attributes['showEditTranslation'] : true;
 
 /**
  * Fonction pour créer un widget personnalisé avec les paramètres du bloc
  */
 if (!function_exists('create_custom_transposh_widget')) {
-    function create_custom_transposh_widget($widget_args, $show_flags, $show_names, $hide_current, $style, $nofollow, $title = '')
+    function create_custom_transposh_widget($widget_args, $show_flags, $show_names, $hide_current, $style, $nofollow, $title = '', $show_edit_translation = true)
     {
         global $my_transposh_plugin;
 
@@ -73,6 +74,11 @@ if (!function_exists('create_custom_transposh_widget')) {
                 break;
         }
 
+        // Ajouter la checkbox "Edit Translation" si applicable
+        if ($show_edit_translation) {
+            $output .= create_edit_translation_checkbox();
+        }
+
         return $output;
     }
 }
@@ -87,7 +93,7 @@ if (!function_exists('create_dropdown_widget')) {
         if (empty($widget_args) || !is_array($widget_args)) {
             return '<div class="transposh-dropdown-widget">Aucune langue disponible</div>';
         }
-        
+
         $output = '<div class="transposh-dropdown-widget">';
         $output .= '<select name="lang" onchange="window.location.href=this.options[this.selectedIndex].value;" class="transposh-language-select">';
 
@@ -99,7 +105,7 @@ if (!function_exists('create_dropdown_widget')) {
             if (!is_array($langrecord) || !isset($langrecord['langorig'], $langrecord['url'], $langrecord['active'])) {
                 continue;
             }
-            
+
             // Masquer la langue actuelle si demandé
             if ($hide_current && $langrecord['active']) {
                 continue;
@@ -132,7 +138,7 @@ if (!function_exists('create_vertical_widget')) {
         if (empty($widget_args) || !is_array($widget_args)) {
             return '<div class="transposh-vertical-widget">Aucune langue disponible</div>';
         }
-        
+
         $output = '<div class="transposh-vertical-widget">';
         $output .= '<ul class="transposh-language-list vertical">';
 
@@ -141,7 +147,7 @@ if (!function_exists('create_vertical_widget')) {
             if (!is_array($langrecord) || !isset($langrecord['langorig'], $langrecord['url'], $langrecord['active'], $langrecord['flag'])) {
                 continue;
             }
-            
+
             // Masquer la langue actuelle si demandé
             if ($hide_current && $langrecord['active']) {
                 continue;
@@ -180,7 +186,7 @@ if (!function_exists('create_horizontal_widget')) {
         if (empty($widget_args) || !is_array($widget_args)) {
             return '<div class="transposh-horizontal-widget">Aucune langue disponible</div>';
         }
-        
+
         $output = '<div class="transposh-horizontal-widget">';
         $output .= '<div class="transposh-language-list horizontal">';
 
@@ -189,7 +195,7 @@ if (!function_exists('create_horizontal_widget')) {
             if (!is_array($langrecord) || !isset($langrecord['langorig'], $langrecord['url'], $langrecord['active'], $langrecord['flag'])) {
                 continue;
             }
-            
+
             // Masquer la langue actuelle si demandé
             if ($hide_current && $langrecord['active']) {
                 continue;
@@ -216,12 +222,57 @@ if (!function_exists('create_horizontal_widget')) {
     }
 }
 
+/**
+ * Fonction pour créer la checkbox "Edit Translation"
+ */
+if (!function_exists('create_edit_translation_checkbox')) {
+    function create_edit_translation_checkbox()
+    {
+        global $my_transposh_plugin;
+        
+        $output = '';
+        
+        // Vérifier si l'édition est permise
+        if (!isset($my_transposh_plugin) || !method_exists($my_transposh_plugin, 'is_editing_permitted')) {
+            return $output;
+        }
+        
+        if ($my_transposh_plugin->is_editing_permitted()) {
+            // Créer l'URL pour basculer le mode édition
+            $current_uri = isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : '';
+            $target_lang = $my_transposh_plugin->target_language;
+            $is_default_lang = $my_transposh_plugin->options->is_default_language($target_lang);
+            
+            // Utilisation de la fonction utilitaire de Transposh pour créer l'URL
+            if (class_exists('transposh_utils') && method_exists('transposh_utils', 'rewrite_url_lang_param')) {
+                $ref = transposh_utils::rewrite_url_lang_param(
+                    $current_uri,
+                    $my_transposh_plugin->home_url,
+                    $my_transposh_plugin->enable_permalinks_rewrite,
+                    ($is_default_lang ? "" : $target_lang),
+                    !$my_transposh_plugin->edit_mode
+                );
+                
+                $checked = $my_transposh_plugin->edit_mode ? 'checked="checked" ' : '';
+                
+                $output .= '<div class="transposh-edit-translation" style="margin-top: 10px;">';
+                $output .= '<input type="checkbox" name="tpedit" value="1" ' . $checked;
+                $output .= ' onclick="document.location.href=\'' . esc_attr($ref) . '\';" />';
+                $output .= '&nbsp;<label for="tpedit">' . __('Edit Translation', 'transposh') . '</label>';
+                $output .= '</div>';
+            }
+        }
+        
+        return $output;
+    }
+}
+
 // Récupération des arguments du widget Transposh
 global $my_transposh_plugin;
 if (isset($my_transposh_plugin->widget)) {
     $clean_page = $my_transposh_plugin->get_clean_url();
     $widget_args = $my_transposh_plugin->widget->create_widget_args($clean_page);
-    
+
     // Vérification que les données de langues sont valides
     if (empty($widget_args) || !is_array($widget_args)) {
         $html = '<div class="wp-block-transposh-fse-language-switcher" style="background: #fff3e0; padding: 10px; border: 1px solid #ff9800; color: #f57c00;">
@@ -232,11 +283,11 @@ if (isset($my_transposh_plugin->widget)) {
         echo $html;
         return $html;
     }
-    
+
     $widget_args['title'] = $title;
 
     // Générer le contenu personnalisé
-    $output = create_custom_transposh_widget($widget_args, $show_flags, $show_names, $hide_current, $style, $nofollow, $title);
+    $output = create_custom_transposh_widget($widget_args, $show_flags, $show_names, $hide_current, $style, $nofollow, $title, $show_edit_translation);
 
     if (empty($output)) {
         $html = '<div class="wp-block-transposh-fse-language-switcher" style="background: #fff3e0; padding: 10px; border: 1px solid #ff9800; color: #f57c00;">

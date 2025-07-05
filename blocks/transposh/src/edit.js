@@ -40,8 +40,15 @@ import "./editor.scss";
  * @return {Element} Element to render.
  */
 export default function Edit({ attributes, setAttributes }) {
-	const { showFlags, showNames, hideCurrentLanguage, style, nofollow, title } =
-		attributes;
+	const {
+		showFlags,
+		showNames,
+		hideCurrentLanguage,
+		style,
+		nofollow,
+		title,
+		showEditTranslation,
+	} = attributes;
 
 	const blockProps = useBlockProps();
 
@@ -103,6 +110,16 @@ export default function Edit({ attributes, setAttributes }) {
 						onChange={(value) => setAttributes({ nofollow: value })}
 						help={__(
 							"Ajoute l'attribut nofollow aux liens de langues",
+							"transposh",
+						)}
+					/>
+
+					<ToggleControl
+						label={__("Afficher 'Edit Translation'", "transposh")}
+						checked={showEditTranslation}
+						onChange={(value) => setAttributes({ showEditTranslation: value })}
+						help={__(
+							"Affiche la checkbox pour basculer en mode édition de traduction",
 							"transposh",
 						)}
 					/>
@@ -195,6 +212,9 @@ export default function Edit({ attributes, setAttributes }) {
 						</strong>
 						{hideCurrentLanguage && (
 							<span> | {__("Langue actuelle masquée", "transposh")}</span>
+						)}
+						{showEditTranslation && (
+							<span> | ✏️ {__("Edit Translation", "transposh")}</span>
 						)}
 					</div>
 				</div>

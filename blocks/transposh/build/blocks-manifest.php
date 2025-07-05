@@ -45,6 +45,10 @@ return array(
 			'title' => array(
 				'type' => 'string',
 				'default' => ''
+			),
+			'showEditTranslation' => array(
+				'type' => 'boolean',
+				'default' => true
 			)
 		),
 		'supports' => array(
