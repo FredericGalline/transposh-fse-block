@@ -16,6 +16,19 @@ This block allows easy integration of the Transposh language selector into the G
 - **WYSIWYG**: Non-clickable preview in editor, fully functional on frontend
 - **Robust**: Error handling and security checks
 - **Multilingual interface**: Supports multiple languages with Poedit compatibility
+- **Realistic preview**: Real country flags and language names in the editor
+
+## Screenshots
+
+### Block Preview in Gutenberg Editor
+The block shows a realistic preview with actual country flags and language names:
+
+![Transposh FSE Block Preview](img/transposh-fse-block.png)
+
+### Block Settings Panel
+Complete control over the language switcher appearance and behavior:
+
+![Transposh FSE Block Settings](img/transposh-fse-block-setting.png)
 
 ## Installation
 
