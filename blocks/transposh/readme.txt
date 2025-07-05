@@ -1,52 +1,48 @@
-=== Transposh ===
-Contributors:      The WordPress Contributors
-Tags:              block
+=== Transposh FSE Language Switcher ===
+Contributors:      Frédéric Galliné
+Tags:              block, transposh, language, switcher, fse
 Tested up to:      6.7
-Stable tag:        0.1.0
+Stable tag:        1.0.0
 License:           GPL-2.0-or-later
 License URI:       https://www.gnu.org/licenses/gpl-2.0.html
 
-Example block scaffolded with Create Block tool.
+Bloc Gutenberg dynamique pour widget PHP natif de Transposh (FSE compatible).
 
 == Description ==
 
-This is the long description. No limit, and you can use Markdown (as well as in the following sections).
+Ce bloc permet d'intégrer facilement le sélecteur de langues Transposh dans l'éditeur Gutenberg et l'éditeur de site WordPress. Il offre toutes les fonctionnalités du widget natif Transposh avec une interface moderne et configurable.
 
-For backwards compatibility, if this section is missing, the full length of the short description will be used, and
-Markdown parsed.
+Fonctionnalités :
+* 3 styles d'affichage : Horizontal, Vertical, Menu déroulant
+* Personnalisation complète : Drapeaux, noms de langues, titre personnalisé
+* Mode édition : Checkbox "Edit Translation" pour la traduction manuelle
+* Options avancées : Masquage de la langue actuelle, attribut nofollow
+* Compatible FSE : Utilisable dans l'éditeur de site WordPress
+* Robuste : Gestion d'erreurs et vérifications de sécurité
 
 == Installation ==
 
-This section describes how to install the plugin and get it working.
-
-e.g.
-
-1. Upload the plugin files to the `/wp-content/plugins/transposh` directory, or install the plugin through the WordPress plugins screen directly.
-1. Activate the plugin through the 'Plugins' screen in WordPress
-
+1. Assurez-vous que le plugin **Transposh** est installé et activé
+2. Copiez le dossier `transposh` dans `/wp-content/themes/votre-theme/blocks/`
+3. Ajoutez l'inclusion du bloc dans votre `functions.php`
 
 == Frequently Asked Questions ==
 
-= A question that someone might have =
+= Le bloc nécessite-t-il le plugin Transposh ? =
 
-An answer to that question.
+Oui, le plugin Transposh doit être installé et activé pour que le bloc fonctionne.
 
-= What about foo bar? =
+= Le bloc est-il compatible avec l'éditeur de site ? =
 
-Answer to foo bar dilemma.
-
-== Screenshots ==
-
-1. This screen shot description corresponds to screenshot-1.(png|jpg|jpeg|gif). Note that the screenshot is taken from
-the /assets directory or the directory that contains the stable readme.txt (tags or trunk). Screenshots in the /assets
-directory take precedence. For example, `/assets/screenshot-1.png` would win over `/tags/4.3/screenshot-1.png`
-(or jpg, jpeg, gif).
-2. This is the second screen shot
+Oui, le bloc est entièrement compatible avec l'éditeur de site WordPress (FSE).
 
 == Changelog ==
 
-= 0.1.0 =
-* Release
+= 1.0.0 =
+* Version initiale avec toutes les fonctionnalités Transposh
+* Support FSE complet
+* Interface de personnalisation dans l'éditeur
+* Gestion d'erreurs et sécurité
 
 == Arbitrary section ==
 

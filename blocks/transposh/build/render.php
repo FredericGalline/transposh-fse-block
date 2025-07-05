@@ -229,20 +229,20 @@ if (!function_exists('create_edit_translation_checkbox')) {
     function create_edit_translation_checkbox()
     {
         global $my_transposh_plugin;
-        
+
         $output = '';
-        
+
         // Vérifier si l'édition est permise
         if (!isset($my_transposh_plugin) || !method_exists($my_transposh_plugin, 'is_editing_permitted')) {
             return $output;
         }
-        
+
         if ($my_transposh_plugin->is_editing_permitted()) {
             // Créer l'URL pour basculer le mode édition
             $current_uri = isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : '';
             $target_lang = $my_transposh_plugin->target_language;
             $is_default_lang = $my_transposh_plugin->options->is_default_language($target_lang);
-            
+
             // Utilisation de la fonction utilitaire de Transposh pour créer l'URL
             if (class_exists('transposh_utils') && method_exists('transposh_utils', 'rewrite_url_lang_param')) {
                 $ref = transposh_utils::rewrite_url_lang_param(
@@ -252,9 +252,9 @@ if (!function_exists('create_edit_translation_checkbox')) {
                     ($is_default_lang ? "" : $target_lang),
                     !$my_transposh_plugin->edit_mode
                 );
-                
+
                 $checked = $my_transposh_plugin->edit_mode ? 'checked="checked" ' : '';
-                
+
                 $output .= '<div class="transposh-edit-translation" style="margin-top: 10px;">';
                 $output .= '<input type="checkbox" name="tpedit" value="1" ' . $checked;
                 $output .= ' onclick="document.location.href=\'' . esc_attr($ref) . '\';" />';
@@ -262,7 +262,7 @@ if (!function_exists('create_edit_translation_checkbox')) {
                 $output .= '</div>';
             }
         }
-        
+
         return $output;
     }
 }
